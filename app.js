@@ -1,4 +1,4 @@
-const API = "https://proyectovich.onrender.com/productos";
+const API = "https://proyectovich.onrender.com";
 let carrito = [];
 
 // 1. INICIALIZACIÓN
