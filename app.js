@@ -1,8 +1,5 @@
-// La raíz de tu servidor en Render
-const API_BASE = "https://proyectovich.onrender.com";
-
-// El endpoint específico que va a buscar los datos a la base de datos
-const API_PRODUCTOS = `${API_BASE}/productos`;
+// CONFIGURACIÓN GLOBAL DE LA API (PRODUCCIÓN RENDER)
+const API_PRODUCTOS = "https://proyectovich.onrender.com/productos";
 let carrito = [];
 
 // 1. INICIALIZACIÓN
@@ -58,7 +55,7 @@ function verificarSesion() {
 
 // 4. CATÁLOGO: OBTENER PRODUCTOS (Con Categorías y Contador)
 function obtenerProductos() {
-    fetch(API)
+    fetch(API_PRODUCTOS)
     .then(res => res.json())
     .then(data => {
         const tabla = document.getElementById("cuerpoTabla");
@@ -68,6 +65,12 @@ function obtenerProductos() {
         const rol = user ? user.rol : "invitado";
         
         tabla.innerHTML = "";
+        
+        if (!Array.isArray(data)) {
+            console.error("La API no devolvió un arreglo válido de productos:", data);
+            return;
+        }
+
         data.forEach(p => {
             let acciones = "";
             const cat = p.categoria || "General";
@@ -172,7 +175,7 @@ function agregarProducto() {
 
     if (!nombre || !precio) return alert("Completa los campos");
 
-    fetch(API, {
+    fetch(API_PRODUCTOS, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ nombre, precio: parseFloat(precio), categoria })
@@ -191,7 +194,7 @@ function agregarProducto() {
 
 function eliminarProducto(id) {
     if (confirm("¿Seguro que deseas eliminarlo?")) {
-        fetch(`${API}/${id}`, { method: "DELETE" })
+        fetch(`${API_PRODUCTOS}/${id}`, { method: "DELETE" })
         .then(() => obtenerProductos())
         .catch(err => console.error("Error al eliminar:", err));
     }
@@ -214,7 +217,7 @@ function enviarEdicion(id) {
     const precio = document.getElementById("precio").value;
     const categoria = document.getElementById("categoria").value;
 
-    fetch(`${API}/${id}`, {
+    fetch(`${API_PRODUCTOS}/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ nombre, precio: parseFloat(precio), categoria })
@@ -225,17 +228,6 @@ function enviarEdicion(id) {
         obtenerProductos();
     })
     .catch(err => console.error("Error al actualizar:", err));
-}
-
-function resetFormulario() {
-    document.getElementById("nombre").value = "";
-    document.getElementById("precio").value = "";
-    document.getElementById("categoria").value = "General";
-    const btn = document.getElementById("btnPrincipal");
-    if (btn) {
-        btn.innerText = "Añadir Producto";
-        btn.onclick = agregarProducto;
-    }
 }
 
 // 7. MANUALES DINÁMICOS
@@ -298,6 +290,17 @@ function configurarManual(tipo) {
     const btnManual = document.getElementById("btnManual");
     if (btnManual) {
         btnManual.onclick = () => abrirModal('modalManual');
+    }
+}
+
+function resetFormulario() {
+    document.getElementById("nombre").value = "";
+    document.getElementById("precio").value = "";
+    document.getElementById("categoria").value = "General";
+    const btn = document.getElementById("btnPrincipal");
+    if (btn) {
+        btn.innerText = "Añadir Producto";
+        btn.onclick = agregarProducto;
     }
 }
 
