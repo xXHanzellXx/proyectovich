@@ -2,7 +2,7 @@ const API_PRODUCTOS = "https://proyectovich.onrender.com/productos";
 let carrito = [];
 
 // CONFIGURACIÓN DE LÍMITES GLOBAL
-const MAX_PRODUCTOS_CARRITO = 20; // Máximo de artículos TOTALES permitidos en el carrito
+const MAX_PRODUCTOS_CARRITO = 35; // <-- Configurado a 35 artículos máximos en total
 
 // INICIALIZACIÓN
 window.onload = () => {
@@ -77,7 +77,6 @@ function obtenerProductos() {
             let acciones = "";
             const cat = p.categoria || "General";
             
-            // Asignamos un stock por defecto (ej: 10) si la API no maneja la propiedad p.stock aún
             const stockDisponible = p.stock !== undefined ? p.stock : 10; 
 
             if (rol === "admin") {
@@ -86,7 +85,6 @@ function obtenerProductos() {
                     <button class="btn-delete" onclick="eliminarProducto('${p._id}')">🗑️</button>
                 `;
             } else {
-                // Si no hay stock, deshabilitamos el input y el botón
                 if (stockDisponible <= 0) {
                     acciones = `<span style="color: red; font-weight: bold;">Agotado ❌</span>`;
                 } else {
@@ -125,11 +123,10 @@ function agregarVarios(id, nombre, precio, stockDisponible) {
     }
 
     const inputCantidad = document.getElementById(`cant-${id}`);
-    const cantidadSolicitada = parseInt(inputCantidad.value); // <-- VARIABLE FIXEADA AQUÍ
+    const cantidadSolicitada = parseInt(inputCantidad.value);
 
     if (isNaN(cantidadSolicitada) || cantidadSolicitada < 1) return;
 
-    // 1. VALIDACIÓN DE STOCK: Contar cuántos de ESTE producto ya hay en el carrito
     const yaEnCarrito = carrito.filter(item => item.id === id).length;
     
     if (yaEnCarrito + cantidadSolicitada > stockDisponible) {
@@ -137,15 +134,12 @@ function agregarVarios(id, nombre, precio, stockDisponible) {
         return;
     }
 
-    // 2. VALIDACIÓN DE LÍMITE TOTAL DEL CARRITO
     if (carrito.length + cantidadSolicitada > MAX_PRODUCTOS_CARRITO) {
         alert(`⚠️ El carrito no puede superar los ${MAX_PRODUCTOS_CARRITO} productos en total. Espacio disponible: ${MAX_PRODUCTOS_CARRITO - carrito.length}`);
         return;
     }
 
-    // Si pasa ambas validaciones, se agrega al carrito
     for (let i = 0; i < cantidadSolicitada; i++) {
-        // Guardamos el ID para poder rastrear el stock de este producto individualmente
         carrito.push({ id, nombre, precio }); 
     }
 
@@ -186,15 +180,67 @@ function eliminarDelCarrito(index) {
     actualizarInterfazCarrito();
 }
 
-function finalizarCompra() {
+// PROCESAR COMPRA Y DISMINUIR STOCK REAL
+async function finalizarCompra() {
     if (carrito.length === 0) return alert("El carrito está vacío.");
     
-    // Aquí idealmente enviarías el pedido al backend para restar el stock en la Base de Datos.
-    alert("🚀 ¡Pedido confirmado! Gracias por tu compra.");
-    carrito = [];
-    actualizarInterfazCarrito();
-    cerrarModal('modalCarrito');
-    obtenerProductos(); // Recargamos para ver reflejados cambios si los hubiera
+    // 1. Agrupar cantidades pedidas por ID de producto
+    const conteoCompra = {};
+    carrito.forEach(item => {
+        conteoCompra[item.id] = (conteoCompra[item.id] || 0) + 1;
+    });
+
+    try {
+        // Bloqueo temporal del botón para evitar clicks fantasma
+        const btnFinalizar = document.querySelector("#modalCarrito .btn-primary");
+        if (btnFinalizar) {
+            btnFinalizar.disabled = true;
+            btnFinalizar.innerText = "Procesando pedido... ⏳";
+        }
+
+        // 2. Traer el stock fresco directo desde el servidor
+        const response = await fetch(API_PRODUCTOS);
+        const productosBackend = await response.json();
+
+        // 3. Iterar y actualizar cada producto que está en el carrito
+        for (const idProducto in conteoCompra) {
+            const cantidadComprada = conteoCompra[idProducto];
+            const productoReal = productosBackend.find(p => p._id === idProducto);
+            
+            if (productoReal) {
+                const stockActual = productoReal.stock !== undefined ? productoReal.stock : 10;
+                const nuevoStock = Math.max(0, stockActual - cantidadComprada);
+
+                // Mandar la petición PUT para actualizar MongoDB de forma permanente
+                await fetch(`${API_PRODUCTOS}/${idProducto}`, {
+                    method: "PUT",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        nombre: productoReal.nombre,
+                        precio: parseFloat(productoReal.precio),
+                        categoria: productoReal.categoria || "General",
+                        stock: parseInt(nuevoStock)
+                    })
+                });
+            }
+        }
+
+        alert("🚀 ¡Pedido confirmado! El inventario se ha actualizado en la base de datos.");
+        carrito = [];
+        actualizarInterfazCarrito();
+        cerrarModal('modalCarrito');
+        obtenerProductos(); // Redibuja el catálogo con los nuevos stocks disminuidos
+
+    } catch (error) {
+        console.error("Error al descontar stock:", error);
+        alert("❌ Ocurrió un error al procesar el stock. Inténtalo de nuevo.");
+    } finally {
+        const btnFinalizar = document.querySelector("#modalCarrito .btn-primary");
+        if (btnFinalizar) {
+            btnFinalizar.disabled = false;
+            btnFinalizar.innerText = "Finalizar Compra";
+        }
+    }
 }
 
 // CRUD ADMINISTRADOR (Con soporte para modificar Stock)
