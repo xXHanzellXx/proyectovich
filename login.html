@@ -50,7 +50,7 @@ async function ejecutarLogin() {
             // Guardamos el objeto completo (incluyendo el rol que viene de Flask)
             localStorage.setItem("usuarioActual", JSON.stringify(data));
             // Redirigimos al catálogo
-            window.location.href = "index.html"; 
+            window.location.href = "catalogo.html"; 
         } else {
             alert("Error: " + (data.error || "Credenciales incorrectas"));
         }
