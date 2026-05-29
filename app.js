@@ -1,4 +1,4 @@
-const API = "http://localhost:5000/productos";
+const API = "https://proyectovich.onrender.com/productos";
 let carrito = [];
 
 // 1. INICIALIZACIÓN
@@ -28,7 +28,7 @@ window.onclick = (e) => {
 // 3. CONTROL DE SESIÓN Y ROLES
 function verificarSesion() {
     const user = JSON.parse(localStorage.getItem("usuarioActual"));
-    const btnLogout = document.getElementById("btnLogut");
+    const btnLogout = document.getElementById("btnLogut"); // Mantenido por compatibilidad de ID en tu HTML
     const btnLoginNav = document.getElementById("btnLoginNav");
     const btnRegNav = document.getElementById("btnRegistroNav");
     const seccionAdmin = document.getElementById("seccionAdmin");
@@ -58,6 +58,8 @@ function obtenerProductos() {
     .then(res => res.json())
     .then(data => {
         const tabla = document.getElementById("cuerpoTabla");
+        if (!tabla) return;
+        
         const user = JSON.parse(localStorage.getItem("usuarioActual"));
         const rol = user ? user.rol : "invitado";
         
@@ -123,7 +125,9 @@ function actualizarInterfazCarrito() {
     const contador = document.getElementById("contadorCarrito");
     const totalSpan = document.getElementById("totalCarrito");
 
-    contador.innerText = carrito.length;
+    if (contador) contador.innerText = carrito.length;
+    if (!lista) return;
+
     lista.innerHTML = "";
     let total = 0;
 
@@ -140,7 +144,7 @@ function actualizarInterfazCarrito() {
             `;
         });
     }
-    totalSpan.innerText = `Total: ₡${total}`;
+    if (totalSpan) totalSpan.innerText = `Total: ₡${total}`;
 }
 
 function eliminarDelCarrito(index) {
@@ -162,22 +166,30 @@ function agregarProducto() {
     const precio = document.getElementById("precio").value;
     const categoria = document.getElementById("categoria").value;
 
-    if(!nombre || !precio) return alert("Completa los campos");
+    if (!nombre || !precio) return alert("Completa los campos");
 
     fetch(API, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ nombre, precio: parseFloat(precio), categoria })
-    }).then(() => {
+    })
+    .then(res => {
+        if (!res.ok) throw new Error("Error al guardar producto");
+        return res.json();
+    })
+    .then(() => {
         obtenerProductos();
         document.getElementById("nombre").value = "";
         document.getElementById("precio").value = "";
-    });
+    })
+    .catch(err => alert(err.message));
 }
 
 function eliminarProducto(id) {
-    if(confirm("¿Seguro que deseas eliminarlo?")) {
-        fetch(`${API}/${id}`, { method: "DELETE" }).then(() => obtenerProductos());
+    if (confirm("¿Seguro que deseas eliminarlo?")) {
+        fetch(`${API}/${id}`, { method: "DELETE" })
+        .then(() => obtenerProductos())
+        .catch(err => console.error("Error al eliminar:", err));
     }
 }
 
@@ -186,8 +198,10 @@ function prepararEdicion(id, nombre, precio, categoria) {
     document.getElementById("precio").value = precio;
     document.getElementById("categoria").value = categoria;
     const btn = document.getElementById("btnPrincipal");
-    btn.innerText = "Actualizar Producto";
-    btn.onclick = () => enviarEdicion(id);
+    if (btn) {
+        btn.innerText = "Actualizar Producto";
+        btn.onclick = () => enviarEdicion(id);
+    }
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
@@ -200,11 +214,13 @@ function enviarEdicion(id) {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ nombre, precio: parseFloat(precio), categoria })
-    }).then(() => {
+    })
+    .then(() => {
         alert("Actualizado ✅");
         resetFormulario();
         obtenerProductos();
-    });
+    })
+    .catch(err => console.error("Error al actualizar:", err));
 }
 
 function resetFormulario() {
@@ -212,8 +228,10 @@ function resetFormulario() {
     document.getElementById("precio").value = "";
     document.getElementById("categoria").value = "General";
     const btn = document.getElementById("btnPrincipal");
-    btn.innerText = "Añadir Producto";
-    btn.onclick = agregarProducto;
+    if (btn) {
+        btn.innerText = "Añadir Producto";
+        btn.onclick = agregarProducto;
+    }
 }
 
 // 7. MANUALES DINÁMICOS
@@ -222,57 +240,61 @@ function configurarManual(tipo) {
     const cuerpo = document.getElementById("manualCuerpo");
 
     const contenidos = {
-    "tecnico": {
-        titulo: "🛠️ Manual Técnico de Arquitectura",
-        cuerpo: `
-            <p><b>Arquitectura del Sistema:</b> Basada en el stack <b>MERN-lite</b> (MongoDB, Express/Flask, JS nativo). Utiliza una estructura de microservicios para el manejo de datos.</p>
-            <br>
-            <p><b>Componentes Clave:</b></p>
-            <ul>
-                <li><b>Base de Datos:</b> Cluster en la nube con MongoDB Atlas utilizando documentos JSON.</li>
-                <li><b>Backend:</b> API REST desarrollada en Flask con manejo de CORS y serialización de objetos.</li>
-                <li><b>Frontend:</b> Interfaz dinámica con manipulacion del DOM y persistencia local mediante LocalStorage.</li>
-            </ul>
-            <br>
-            <p><b>Endpoints Habilitados:</b> GET (Lectura), POST (Creación), PUT (Actualización) y DELETE (Eliminación) sobre la ruta <code>/productos</code>.</p>
-        `
-    },
-    "usuario_invitado": {
-        titulo: "📖 Guía de Navegación para Visitantes",
-        cuerpo: `
-            <p>¡Bienvenido a <b>ShopSystem</b>! Actualmente estás navegando en modo lectura.</p>
-            <br>
-            <p><b>¿Qué puedes hacer?</b></p>
-            <ul>
-                <li>Explorar nuestro catálogo de productos en tiempo real.</li>
-                <li>Visualizar precios actualizados y disponibilidad.</li>
-            </ul>
-            <br>
-            <p>Para poder agregar artículos a tu carrito de compras y realizar pedidos, por favor utiliza los botones de la parte superior para <b>Iniciar Sesión</b> o <b>Crear una cuenta nueva</b> en pocos segundos.</p>
-        `
-    },
-    "usuario_cliente": {
-        titulo: "🛍️ Panel de Ayuda para Clientes",
-        cuerpo: `
-            <p>¡Hola! Has iniciado sesión correctamente. Ahora tienes acceso total a las funciones de compra.</p>
-            <br>
-            <p><b>Instrucciones de Compra:</b></p>
-            <ol>
-                <li>Navega por la tabla de productos y haz clic en el botón <b> Comprar</b> para añadir items.</li>
-                <li>Revisa tu selección haciendo clic en el <b>botón flotante verde</b> ubicado en la esquina inferior izquierda.</li>
-                <li>Desde el carrito modal, puedes eliminar productos o confirmar tu pedido final.</li>
-            </ol>
-            <br>
-            <p><i>Nota: Tu sesión permanecerá activa hasta que decidas usar el botón de "Cerrar Sesión".</i></p>
-        `
-    }
-};
+        "tecnico": {
+            titulo: "🛠️ Manual Técnico de Arquitectura",
+            cuerpo: `
+                <p><b>Arquitectura del Sistema:</b> Basada en el stack <b>MERN-lite</b> (MongoDB, Express/Flask, JS nativo). Utiliza una estructura de microservicios para el manejo de datos.</p>
+                <br>
+                <p><b>Componentes Clave:</b></p>
+                <ul>
+                    <li><b>Base de Datos:</b> Cluster en la nube con MongoDB Atlas utilizando documentos JSON.</li>
+                    <li><b>Backend:</b> API REST desarrollada en Flask con manejo de CORS y serialización de objetos.</li>
+                    <li><b>Frontend:</b> Interfaz dinámica con manipulacion del DOM y persistencia local mediante LocalStorage.</li>
+                </ul>
+                <br>
+                <p><b>Endpoints Habilitados:</b> GET (Lectura), POST (Creación), PUT (Actualización) y DELETE (Eliminación) sobre la ruta <code>/productos</code>.</p>
+            `
+        },
+        "usuario_invitado": {
+            titulo: "📖 Guía de Navegación para Visitantes",
+            cuerpo: `
+                <p>¡Bienvenido a <b>ShopSystem</b>! Actualmente estás navegando en modo lectura.</p>
+                <br>
+                <p><b>¿Qué puedes hacer?</b></p>
+                <ul>
+                    <li>Explorar nuestro catálogo de productos en tiempo real.</li>
+                    <li>Visualizar precios actualizados y disponibilidad.</li>
+                </ul>
+                <br>
+                <p>Para poder agregar artículos a tu carrito de compras y realizar pedidos, por favor utiliza los botones de la parte superior para <b>Iniciar Sesión</b> o <b>Crear una cuenta nueva</b> en pocos segundos.</p>
+            `
+        },
+        "usuario_cliente": {
+            titulo: "🛍️ Panel de Ayuda para Clientes",
+            cuerpo: `
+                <p>¡Hola! Has iniciado sesión correctamente. Ahora tienes acceso total a las funciones de compra.</p>
+                <br>
+                <p><b>Instrucciones de Compra:</b></p>
+                <ol>
+                    <li>Navega por la tabla de productos y haz clic en el botón <b> Comprar</b> para añadir items.</li>
+                    <li>Revisa tu selección haciendo clic en el <b>botón flotante verde</b> ubicado en la esquina inferior izquierda.</li>
+                    <li>Desde el carrito modal, puedes eliminar productos o confirmar tu pedido final.</li>
+                </ol>
+                <br>
+                <p><i>Nota: Tu sesión permanecerá activa hasta que decidas usar el botón de "Cerrar Sesión".</i></p>
+            `
+        }
+    };
 
-    if(titulo && cuerpo) {
+    if (titulo && cuerpo && contenidos[tipo]) {
         titulo.innerText = contenidos[tipo].titulo;
         cuerpo.innerHTML = contenidos[tipo].cuerpo;
     }
-    document.getElementById("btnManual").onclick = () => abrirModal('modalManual');
+    
+    const btnManual = document.getElementById("btnManual");
+    if (btnManual) {
+        btnManual.onclick = () => abrirModal('modalManual');
+    }
 }
 
 function logout() {
