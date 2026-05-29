@@ -2,17 +2,147 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ShopSystem - Registro</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-dark: #0f172a;
+            --surface-dark: #1e293b;
+            --primary-glow: #38bdf8;
+            --text-muted: #94a3b8;
+            --border-glow: #334155;
+            --input-bg: #0f172a;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            color: #f8fafc;
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container-login {
+            width: 100%;
+            max-width: 450px;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .card {
+            background: var(--surface-dark);
+            border: 1px solid var(--border-glow);
+            border-radius: 20px;
+            padding: 40px 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+            text-align: center;
+        }
+
+        .card h2 {
+            font-size: 2rem;
+            font-weight: 800;
+            margin: 0 0 10px 0;
+            background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.5px;
+        }
+
+        hr {
+            border: none;
+            height: 1px;
+            background: var(--border-glow);
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            text-align: left;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        .form-group label {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            margin-bottom: -10px;
+            letter-spacing: 0.5px;
+        }
+
+        .form-group input {
+            background: var(--input-bg);
+            border: 1px solid var(--border-glow);
+            border-radius: 10px;
+            padding: 14px 16px;
+            font-size: 1rem;
+            color: #f8fafc;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus {
+            border-color: var(--primary-glow);
+            box-shadow: 0 0 10px rgba(56, 189, 248, 0.2);
+        }
+
+        .btn-login {
+            background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+            color: white;
+            border: none;
+            padding: 16px;
+            font-size: 1.05rem;
+            font-weight: 600;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(2, 132, 199, 0.3);
+            margin-top: 10px;
+        }
+
+        .btn-login:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(2, 132, 199, 0.5);
+            background: linear-gradient(135deg, #38bdf8 0%, #0284c7 100%);
+        }
+
+        .footer-text {
+            margin-top: 25px;
+            font-size: 0.95rem;
+            color: var(--text-muted);
+        }
+
+        .footer-text a {
+            color: var(--primary-glow);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.2s;
+        }
+
+        .footer-text a:hover {
+            color: #0284c7;
+            text-decoration: underline;
+        }
+    </style>
 </head>
 <body>
+
 <div class="container-login">
     <div class="card">
         <h2>📝 Crear Cuenta</h2>
         <hr>
         <div class="form-group">
+            <label for="regUsuario">Usuario:</label>
             <input type="text" id="regUsuario" placeholder="Usuario nuevo">
+            
+            <label for="regPassword">Contraseña:</label>
             <input type="password" id="regPassword" placeholder="Contraseña">
+            
             <button class="btn-login" onclick="ejecutarRegistro()">Registrarse</button>
         </div>
         <p class="footer-text">¿Ya tienes cuenta? <a href="login.html">Loguéate</a></p>
@@ -26,7 +156,6 @@ async function ejecutarRegistro() {
     if (!usuario || !password) return alert("Completa los datos");
 
     try {
-        // 🔥 CORREGIDO: Cambiado de localhost a tu servidor global en Render
         const res = await fetch("https://proyectovich.onrender.com/registro", {
             method: "POST",
             headers: {"Content-Type": "application/json"},
