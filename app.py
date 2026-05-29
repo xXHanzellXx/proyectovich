@@ -12,13 +12,15 @@ app = Flask(__name__)
 # 1. CORS CONFIGURADO PARA DESARROLLO (Acepta todo)
 CORS(app, resources={r"/*": {"origins": "*"}})
 
-# 2. CONEXIÓN CON VALIDACIÓN DE ERRORES
+# 2. CONEXIÓN CON VALIDACIÓN DE ERRORES Y PARÁMETRO TLS CORREGIDO
 try:
     mongo_uri = os.getenv("MONGO_URI")
-    # serverSelectionTimeoutMS hace que no se quede pegado 30 segundos si la clave está mal
-    client = MongoClient(mongo_uri, serverSelectionTimeoutMS=5000)
+    # serverSelectionTimeoutMS evita bloqueos largos si la clave está mal
+    # tlsAllowInvalidCertificates previene los errores de handshake SSL/TLS en Render
+    client = MongoClient(mongo_uri, serverSelectionTimeoutMS=5000, tlsAllowInvalidCertificates=True)
     db = client["tienda"]
     productos_col = db["productos"]
+    usuarios_col = db["usuarios"]
     
     # Intentar un comando simple para confirmar conexión
     client.admin.command('ping')
@@ -26,11 +28,16 @@ try:
 except Exception as e:
     print(f"❌ ERROR DE CONEXIÓN A MONGO: {e}")
 
+# 3. RUTA RAÍZ (Para evitar el error 404 en la URL principal)
+@app.route("/", methods=["GET"])
+def home():
+    return jsonify({"mensaje": "Backend de ShopSystem corriendo perfectamente en Render"}), 200
+
+# 4. RUTAS DE PRODUCTOS
 @app.route("/productos", methods=["GET"])
 def get_all():
     try:
         res = []
-        # Buscamos todos los productos
         for p in productos_col.find():
             p["_id"] = str(p["_id"])
             res.append(p)
@@ -68,27 +75,36 @@ def update(id):
         return jsonify({"mensaje": "Actualizado"}), 200
     except Exception as e:
         return jsonify({"error": "Error al actualizar"}), 400
-# Añade esto a tus colecciones
-usuarios_col = db["usuarios"]
 
+# 5. RUTAS DE AUTENTICACIÓN
 @app.route("/registro", methods=["POST"])
 def registro():
-    data = request.json
-    if usuarios_col.find_one({"usuario": data['usuario']}):
-        return jsonify({"error": "El usuario ya existe"}), 400
-    usuarios_col.insert_one(data)
-    return jsonify({"mensaje": "Usuario registrado"}), 201
+    try:
+        data = request.json
+        if not data.get("usuario") or not data.get("password"):
+            return jsonify({"error": "Faltan campos obligatorios"}), 400
+            
+        if usuarios_col.find_one({"usuario": data['usuario']}):
+            return jsonify({"error": "El usuario ya existe"}), 400
+        
+        usuarios_col.insert_one(data)
+        return jsonify({"mensaje": "Usuario registrado"}), 201
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 @app.route("/login", methods=["POST"])
 def login():
-    data = request.json
-    user = usuarios_col.find_one({"usuario": data['usuario'], "password": data['password']})
-    if user:
-        return jsonify({
-            "usuario": user['usuario'],
-            "rol": user.get('rol', 'cliente') # por defecto cliente
-        }), 200
-    return jsonify({"error": "Credenciales inválidas"}), 401
+    try:
+        data = request.json
+        user = usuarios_col.find_one({"usuario": data['usuario'], "password": data['password']})
+        if user:
+            return jsonify({
+                "usuario": user['usuario'],
+                "rol": user.get('rol', 'cliente')
+            }), 200
+        return jsonify({"error": "Credenciales inválidas"}), 401
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
 if __name__ == "__main__":
-    # Escuchamos en todas las interfaces para evitar bloqueos de red local
     app.run(debug=True, port=5000, host='0.0.0.0')
