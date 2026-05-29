@@ -22,10 +22,11 @@
             font-family: 'Segoe UI', system-ui, sans-serif;
             color: #f8fafc;
             margin: 0;
-            padding: 40px 20px;
+            padding: 20px;
             min-height: 100vh;
             display: flex;
             justify-content: center;
+            box-sizing: border-box;
         }
 
         .container {
@@ -33,20 +34,30 @@
             max-width: 1000px;
             display: flex;
             flex-direction: column;
-            gap: 30px;
+            gap: 25px;
         }
 
-        /* Encabezado Principal */
+        /* ENCABEZADO RESPONSIVO */
         .header-flex {
             display: flex;
-            justify-content: space-between;
+            flex-direction: column;
+            gap: 15px;
             align-items: center;
+            text-align: center;
             border-bottom: 1px solid var(--border-glow);
             padding-bottom: 20px;
         }
 
+        @media (min-width: 640px) {
+            .header-flex {
+                flex-direction: row;
+                justify-content: space-between;
+                text-align: left;
+            }
+        }
+
         .header-flex h2 {
-            font-size: 2rem;
+            font-size: 1.8rem;
             font-weight: 800;
             margin: 0;
             background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 100%);
@@ -54,17 +65,38 @@
             -webkit-text-fill-color: transparent;
         }
 
-        /* Botones de Navegación superior */
+        #authButtons {
+            display: flex;
+            gap: 10px;
+            width: 100%;
+            justify-content: center;
+        }
+
+        @media (min-width: 640px) {
+            #authButtons {
+                width: auto;
+            }
+        }
+
         .btn-nav, .btn-logout {
             background: rgba(255, 255, 255, 0.05);
             border: 1px solid var(--border-glow);
             color: #f8fafc;
-            padding: 10px 20px;
+            padding: 10px 16px;
             border-radius: 8px;
             font-weight: 600;
+            font-size: 0.9rem;
             cursor: pointer;
             transition: all 0.3s ease;
-            margin-left: 10px;
+            flex: 1;
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        @media (min-width: 640px) {
+            .btn-nav, .btn-logout {
+                flex: none;
+            }
         }
 
         .btn-nav:hover {
@@ -72,122 +104,145 @@
             background: rgba(56, 189, 248, 0.1);
         }
 
-        .btn-logout:hover {
-            border-color: #ef4444;
-            background: rgba(239, 68, 68, 0.1);
-            color: #ef4444;
-        }
-
-        /* Tarjeta de Panel Admin */
+        /* FORMULARIO ADMIN RESPONSIVO (GRID) */
         .card {
             background: var(--surface-dark);
             border: 1px solid var(--border-glow);
             border-radius: 16px;
-            padding: 25px;
+            padding: 20px;
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
         }
 
         .card h3 {
             margin: 0 0 5px 0;
-            font-size: 1.3rem;
-            color: #f1f5f9;
+            font-size: 1.25rem;
         }
 
-        .text-muted {
+        .text-sm {
+            font-size: 0.85rem;
             color: var(--text-muted);
-            font-size: 0.9rem;
             margin-bottom: 20px;
         }
 
-        /* Formulario Alineado */
         .form-group {
-            display: flex;
-            gap: 15px;
-            flex-wrap: wrap;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+        }
+
+        @media (min-width: 768px) {
+            .form-group {
+                grid-template-columns: 2fr 1fr 1fr auto;
+                align-items: center;
+            }
         }
 
         .form-group input, .form-group select {
             background: var(--input-bg);
             border: 1px solid var(--border-glow);
             border-radius: 8px;
-            padding: 12px 16px;
-            font-size: 1rem;
+            padding: 12px;
+            font-size: 0.95rem;
             color: #f8fafc;
             outline: none;
-            flex: 1;
-            min-width: 180px;
+            width: 100%;
+            box-sizing: border-box;
             transition: all 0.3s ease;
         }
 
         .form-group input:focus, .form-group select:focus {
             border-color: var(--primary-glow);
-            box-shadow: 0 0 10px rgba(56, 189, 248, 0.15);
         }
 
-        /* Botones de Acción */
         .btn-primary {
             background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
             color: white;
             border: none;
-            padding: 12px 25px;
-            font-size: 1rem;
+            padding: 12px 20px;
+            font-size: 0.95rem;
             font-weight: 600;
             border-radius: 8px;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(2, 132, 199, 0.2);
+            width: 100%;
         }
 
-        .btn-primary:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 6px 20px rgba(2, 132, 199, 0.4);
-            background: linear-gradient(135deg, #38bdf8 0%, #0284c7 100%);
+        @media (min-width: 768px) {
+            .btn-primary {
+                width: auto;
+            }
         }
 
-        /* Diseño de Tablas Modernas */
+        /* TABLA MÓVIL ADAPTATIVA INTELIGENTE */
         .table-wrap {
             background: var(--surface-dark);
             border: 1px solid var(--border-glow);
             border-radius: 16px;
             overflow: hidden;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
-            text-align: left;
         }
 
-        th {
-            background: rgba(15, 23, 42, 0.6);
-            color: var(--text-muted);
-            font-weight: 600;
-            padding: 16px 20px;
-            font-size: 0.9rem;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            border-bottom: 1px solid var(--border-glow);
+        /* Esconder cabecera de tabla tradicional en móviles */
+        @media (max-width: 639px) {
+            table, thead, tbody, th, td, tr {
+                display: block;
+            }
+            thead {
+                display: none;
+            }
+            tr {
+                border-bottom: 1px solid var(--border-glow);
+                padding: 15px 10px;
+                background: rgba(15, 23, 42, 0.2);
+            }
+            td {
+                border: none;
+                padding: 6px 10px;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                text-align: right;
+                font-size: 0.95rem;
+            }
+            /* Generar etiquetas dinámicas simulando columnas */
+            td::before {
+                content: attr(data-label);
+                float: left;
+                font-weight: 600;
+                color: var(--text-muted);
+                text-transform: uppercase;
+                font-size: 0.8rem;
+            }
         }
 
-        td {
-            padding: 16px 20px;
-            color: #e2e8f0;
-            border-bottom: 1px solid rgba(51, 65, 85, 0.5);
-            font-size: 1rem;
+        /* Estilos de tabla para pantallas grandes */
+        @media (min-width: 640px) {
+            th {
+                background: rgba(15, 23, 42, 0.5);
+                color: var(--text-muted);
+                font-weight: 600;
+                padding: 14px 20px;
+                font-size: 0.85rem;
+                text-transform: uppercase;
+                border-bottom: 1px solid var(--border-glow);
+                text-align: left;
+            }
+            td {
+                padding: 14px 20px;
+                border-bottom: 1px solid rgba(51, 65, 85, 0.4);
+            }
+            tr:hover td {
+                background: rgba(255, 255, 255, 0.01);
+            }
         }
 
-        tr:last-child td {
-            border-bottom: none;
-        }
-
-        tr:hover td {
-            background: rgba(255, 255, 255, 0.02);
-        }
-
-        /* Modales Avanzados */
+        /* MODALES RESPONSIVOS */
         .modal {
-            display: none; 
+            display: none;
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(15, 23, 42, 0.8);
@@ -195,101 +250,74 @@
             z-index: 1000;
             align-items: center;
             justify-content: center;
+            padding: 15px;
+            box-sizing: border-box;
         }
-        
-        .modal.active { 
-            display: flex; 
-        }
-
+        .modal.active { display: flex; }
         .modal-content {
             background: var(--surface-dark);
             border: 1px solid var(--border-glow);
-            padding: 35px 30px;
-            border-radius: 20px;
+            padding: 25px;
+            border-radius: 16px;
             max-width: 500px;
-            width: 90%;
+            width: 100%;
             position: relative;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-            color: #f8fafc;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+            box-sizing: border-box;
         }
-
-        .modal-content h2 {
-            margin-top: 0;
-            font-size: 1.6rem;
-            color: #f1f5f9;
-        }
-
         .close {
             position: absolute;
-            top: 20px; right: 25px;
-            font-size: 28px; cursor: pointer;
+            top: 15px; right: 15px;
+            font-size: 24px; cursor: pointer;
             background: none; border: none; color: var(--text-muted);
-            transition: color 0.2s;
-        }
-        
-        .close:hover { 
-            color: #ffffff; 
         }
 
-        /* Botón Flotante de Ayuda (?) */
+        /* BOTONES FLOTANTES COMPACTOS */
         #btnManual {
             position: fixed;
-            bottom: 25px;
-            right: 95px;
-            width: 55px;
-            height: 55px;
+            bottom: 15px;
+            right: 80px;
+            width: 50px;
+            height: 50px;
             border-radius: 50%;
             background: #0284c7;
             color: white;
             border: none;
-            font-size: 1.4rem;
+            font-size: 1.3rem;
             font-weight: bold;
             cursor: pointer;
-            box-shadow: 0 4px 15px rgba(2, 132, 199, 0.4);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
             z-index: 999;
-            transition: all 0.3s ease;
         }
 
-        #btnManual:hover {
-            background: #38bdf8;
-            transform: scale(1.05);
-        }
-
-        /* Botón Flotante del Carrito */
         .btn-carrito-flotante {
             position: fixed;
-            bottom: 25px;
-            right: 25px;
-            width: 55px;
-            height: 55px;
+            bottom: 15px;
+            right: 15px;
+            width: 50px;
+            height: 50px;
             border-radius: 50%;
             background: var(--success);
             color: white;
             border: none;
-            font-size: 1.3rem;
+            font-size: 1.2rem;
             cursor: pointer;
-            box-shadow: 0 4px 15px rgba(34, 197, 150, 0.4);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
             z-index: 999;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: all 0.3s ease;
-        }
-
-        .btn-carrito-flotante:hover {
-            transform: scale(1.05);
-            background: #4ade80;
         }
 
         #contadorCarrito {
-            background: #ffffff;
+            background: white;
             color: #0f172a;
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             font-weight: bold;
-            padding: 2px 6px;
+            padding: 1px 5px;
             border-radius: 10px;
             position: absolute;
-            top: 8px; right: 6px;
+            top: 6px; right: 4px;
         }
     </style>
 </head>
@@ -308,7 +336,7 @@
     <div id="seccionAdmin" style="display:none;">
         <div class="card">
             <h3>🛠️ Panel de Administración</h3>
-            <p class="text-muted">Agregar o editar productos en la base de datos.</p>
+            <p class="text-sm">Agregar o editar productos en la base de datos.</p>
             <div class="form-group">
                 <input type="text" id="nombre" placeholder="Nombre del producto">
                 <input type="number" id="precio" placeholder="Precio (₡)">
@@ -344,28 +372,26 @@
 <div id="modalManual" class="modal">
     <div class="modal-content">
         <button class="close" onclick="cerrarModal('modalManual')">&times;</button>
-        <h2 id="manualTitulo" style="color: var(--primary-glow);"></h2>
+        <h2 id="manualTitulo" style="color: var(--primary-glow); margin-top: 0;"></h2>
         <hr style="border: none; height: 1px; background: var(--border-glow); margin: 15px 0;">
-        <div id="manualCuerpo" style="line-height: 1.6; color: #cbd5e1;"></div>
+        <div id="manualCuerpo"></div>
     </div>
 </div>
 
 <div id="modalCarrito" class="modal">
     <div class="modal-content">
         <button class="close" onclick="cerrarModal('modalCarrito')">&times;</button>
-        <h2>🛒 Tu Carrito de Compras</h2>
+        <h2 style="margin-top: 0;">🛒 Tu Carrito de Compras</h2>
         <hr style="border: none; height: 1px; background: var(--border-glow); margin: 15px 0;">
         <div id="listaCarrito">
-            <p class="text-muted">El carrito está vacío.</p>
+            <p class="text-sm" style="text-align: center;">El carrito está vacío.</p>
         </div>
-        <div class="carrito-footer" style="margin-top: 25px; border-top: 1px solid var(--border-glow); padding-top: 20px;">
-            <div class="carrito-total" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                <span style="font-size: 1.1rem; font-weight: 600; color: var(--text-muted);">Total General:</span>
-                <b id="totalCarrito" style="font-size: 1.5rem; color: var(--success);">₡0</b>
+        <div class="carrito-footer" style="margin-top: 20px; border-top: 1px solid var(--border-glow); padding-top: 15px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                <span style="font-weight: 600; color: var(--text-muted);">Total:</span>
+                <b id="totalCarrito" style="font-size: 1.3rem; color: var(--success);">₡0</b>
             </div>
-            <button class="btn-primary" style="width: 100%; background: var(--success); padding: 14px; box-shadow: 0 4px 15px rgba(34,197,94,0.2);" onclick="finalizarCompra()">
-                Finalizar Compra
-            </button>
+            <button class="btn-primary" style="width: 100%; background: var(--success);" onclick="finalizarCompra()">Finalizar Compra</button>
         </div>
     </div>
 </div>
