@@ -39,7 +39,6 @@
             overflow: hidden;
         }
 
-        /* Indicador de estado del Servidor */
         .status-badge {
             display: inline-flex;
             align-items: center;
@@ -88,7 +87,6 @@
             line-height: 1.6;
         }
 
-        /* Botón de Acceso Principal */
         .btn-primary {
             background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
             color: white;
@@ -111,7 +109,6 @@
             background: linear-gradient(135deg, #38bdf8 0%, #0284c7 100%);
         }
 
-        /* Grid Tecnológico */
         .tech-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -154,6 +151,35 @@
             margin: 0;
             line-height: 1.5;
         }
+
+        /* ESTILOS INCORPORADOS PARA ASEGURAR EL DESPLIEGUE DEL MODAL */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal.active { display: flex; }
+        .modal-content {
+            background: var(--surface-dark);
+            border: 1px solid var(--border-glow);
+            padding: 30px;
+            border-radius: 20px;
+            max-width: 550px;
+            width: 90%;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        .close {
+            position: absolute;
+            top: 15px; right: 20px;
+            font-size: 24px; cursor: pointer; color: var(--text-muted);
+        }
+        .close:hover { color: #fff; }
     </style>
 </head>
 <body>
@@ -167,7 +193,7 @@
     <h1>ShopSystem</h1>
     <p class="subtitle">Consola centralizada para la administración automatizada de catálogos, control de inventario y sincronización persistente en la nube.</p>
     
-    <button class="btn-primary" onclick="window.location.href='catalogo.html'">
+    <button class="btn-primary" onclick="window.location.href='index.html'">
         <span>Acceder a la Consola</span>
         <i class="fa-solid fa-arrow-right"></i>
     </button>
@@ -193,11 +219,12 @@
 
 <div id="modalManual" class="modal">
     <div class="modal-content">
-        <span class="close">&times;</span>
-        <h2 id="manualTitulo" class="manual-titulo"></h2>
-        <div id="manualCuerpo" class="manual-cuerpo"></div>
+        <span class="close" onclick="cerrarModal('modalManual')">&times;</span>
+        <h2 id="manualTitulo" style="margin-top:0; color: var(--primary-glow);"></h2>
+        <div id="manualCuerpo" style="color: #cbd5e1; line-height: 1.6;"></div>
     </div>
 </div>
 
+<script src="app.js?v=1.2"></script>
 </body>
 </html>
