@@ -4,6 +4,62 @@
     <meta charset="UTF-8">
     <title>ShopSystem - Gestión de Productos</title>
     <link rel="stylesheet" href="styles.css">
+    <style>
+        /* GARANTIZA EL DESPLIEGUE CORRECTO Y CENTRADO DE LOS MODALES */
+        .modal {
+            display: none; 
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal.active { 
+            display: flex; 
+        }
+        .modal-content {
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 16px;
+            max-width: 500px;
+            width: 90%;
+            position: relative;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            color: #334155;
+        }
+        .close {
+            position: absolute;
+            top: 15px; right: 20px;
+            font-size: 24px; cursor: pointer;
+            background: none; border: none; color: #64748b;
+        }
+        .close:hover { 
+            color: #0f172a; 
+        }
+        
+        /* Ajuste estético para el botón flotante de ayuda */
+        #btnManual {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: #0284c7;
+            color: white;
+            border: none;
+            font-size: 1.5rem;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            z-index: 999;
+        }
+        #btnManual:hover {
+            background: #0369a1;
+        }
+    </style>
 </head>
 <body>
 
@@ -11,14 +67,12 @@
     <div class="header-flex">
         <h2>📦 ShopSystem Inventario</h2>
         <div id="authButtons">
-            <!-- Botones de Navegación (Visibles según sesión) -->
             <button id="btnLoginNav" class="btn-nav" onclick="window.location.href='login.html'">Iniciar Sesión</button>
             <button id="btnRegistroNav" class="btn-nav" onclick="window.location.href='registro.html'">Registrarse</button>
             <button id="btnLogut" class="btn-logout" onclick="logout()" style="display:none;">Cerrar Sesión</button>
         </div>
     </div>
 
-    <!-- SECCIÓN ADMIN ACTUALIZADA CON CATEGORÍAS -->
     <div id="seccionAdmin" style="display:none;">
         <div class="card">
             <h3>🛠️ Panel de Administración</h3>
@@ -27,7 +81,6 @@
                 <input type="text" id="nombre" placeholder="Nombre del producto">
                 <input type="number" id="precio" placeholder="Precio (₡)">
                 
-                <!-- IMPORTANTE: Selector de categorías añadido -->
                 <select id="categoria">
                     <option value="General">General</option>
                     <option value="Electrónica">Electrónica</option>
@@ -41,24 +94,21 @@
         </div>
     </div>
 
-    <!-- TABLA DE PRODUCTOS -->
     <div class="table-wrap">
         <table>
             <thead>
                 <tr>
-                    <th>Producto / Categoría</th> <!-- Cabecera actualizada -->
+                    <th>Producto / Categoría</th>
                     <th>Precio</th>
-                    <th>Acciones / Cantidad</th> <!-- Cabecera actualizada -->
+                    <th>Acciones / Cantidad</th>
                 </tr>
             </thead>
             <tbody id="cuerpoTabla">
-                <!-- JS inyecta las filas aquí -->
-            </tbody>
+                </tbody>
         </table>
     </div>
 </div>
 
-<!-- MODAL MANUAL (Centrado) -->
 <div id="modalManual" class="modal">
     <div class="modal-content">
         <button class="close" onclick="cerrarModal('modalManual')">&times;</button>
@@ -68,7 +118,6 @@
     </div>
 </div>
 
-<!-- MODAL CARRITO (Centrado) -->
 <div id="modalCarrito" class="modal">
     <div class="modal-content">
         <button class="close" onclick="cerrarModal('modalCarrito')">&times;</button>
@@ -82,18 +131,17 @@
                 <span style="font-size: 1.2rem; font-weight: bold;">Total:</span>
                 <b id="totalCarrito" style="font-size: 1.4rem; color: var(--success);">₡0</b>
             </div>
-            <button class="btn-primary" style="width: 100%; background: var(--success); padding: 12px;" onclick="finalizarCompra()">Finalizar Compra</button>
+            <button class="btn-primary" style="width: 100%; background: #22c55e; padding: 12px; border: none; color: white; border-radius: 8px; cursor: pointer; font-weight: bold;" onclick="finalizarCompra()">Finalizar Compra</button>
         </div>
     </div>
 </div>
 
-<!-- Botones Flotantes -->
-<button id="btnManual" title="Ayuda">?</button>
+<button id="btnManual" title="Ayuda" onclick="abrirModal('modalManual')">?</button>
 
 <button id="btnCarritoFlotante" class="btn-carrito-flotante" onclick="abrirModal('modalCarrito')">
     🛒 <span id="contadorCarrito">0</span>
 </button>
 
-<script src="app.js"></script>
+<script src="app.js?v=1.3"></script>
 </body>
 </html>
