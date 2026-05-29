@@ -9,8 +9,12 @@ load_dotenv()
 
 app = Flask(__name__)
 
-# 1. CORS CONFIGURADO PARA DESARROLLO (Acepta todo)
-CORS(app, resources={r"/*": {"origins": "*"}})
+# 1. CORS CONFIGURADO CORRECTAMENTE PARA PRODUCCIÓN (Soporta métodos complejos y JSON)
+CORS(app, resources={r"/*": {
+    "origins": "*", 
+    "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    "allow_headers": ["Content-Type", "Authorization"]
+}})
 
 # 2. CONEXIÓN CON VALIDACIÓN DE ERRORES Y PARÁMETRO TLS CORREGIDO
 try:
@@ -27,6 +31,12 @@ try:
     print("✅ ¡Conexión exitosa a MongoDB Atlas!")
 except Exception as e:
     print(f"❌ ERROR DE CONEXIÓN A MONGO: {e}")
+
+# Manejo explícito de las peticiones Preflight OPTIONS para evitar bloqueos de CORS
+@app.before_request
+def handle_options_requests():
+    if request.method == "OPTIONS":
+        return jsonify({"status": "ok"}), 200
 
 # 3. RUTA RAÍZ (Para evitar el error 404 en la URL principal)
 @app.route("/", methods=["GET"])
