@@ -1,14 +1,14 @@
-// CONFIGURACIÓN GLOBAL DE LA API (PRODUCCIÓN RENDER)
+
 const API_PRODUCTOS = "https://proyectovich.onrender.com/productos";
 let carrito = [];
 
-// 1. INICIALIZACIÓN
+// INICIALIZACIÓN
 window.onload = () => {
     verificarSesion();
     obtenerProductos();
 };
 
-// 2. GESTIÓN DE MODALES (Centrado Flex)
+// GESTIÓN DE MODALES (Centrado Flex)
 function abrirModal(id) {
     const modal = document.getElementById(id);
     if (modal) modal.classList.add('active');
@@ -26,7 +26,7 @@ window.onclick = (e) => {
     }
 };
 
-// 3. CONTROL DE SESIÓN Y ROLES
+// CONTROL DE SESIÓN Y ROLES
 function verificarSesion() {
     const user = JSON.parse(localStorage.getItem("usuarioActual"));
     const btnLogout = document.getElementById("btnLogut"); // Mantenido por compatibilidad de ID en tu HTML
@@ -53,7 +53,7 @@ function verificarSesion() {
     }
 }
 
-// 4. CATÁLOGO: OBTENER PRODUCTOS (Con Categorías y Contador)
+// CATÁLOGO: OBTENER PRODUCTOS (Con Categorías y Contador)
 function obtenerProductos() {
     fetch(API_PRODUCTOS)
     .then(res => res.json())
@@ -104,7 +104,7 @@ function obtenerProductos() {
     .catch(err => console.error("Error al obtener productos:", err));
 }
 
-// 5. LÓGICA DEL CARRITO (Con Contador)
+// CARRITO
 function agregarVarios(id, nombre, precio) {
     const user = localStorage.getItem("usuarioActual");
     if (!user) {
@@ -167,7 +167,7 @@ function finalizarCompra() {
     cerrarModal('modalCarrito');
 }
 
-// 6. CRUD ADMINISTRADOR (Con Categorías)
+// CRUD ADMINISTRADOR (Con Categorías)
 function agregarProducto() {
     const nombre = document.getElementById("nombre").value;
     const precio = document.getElementById("precio").value;
@@ -230,7 +230,7 @@ function enviarEdicion(id) {
     .catch(err => console.error("Error al actualizar:", err));
 }
 
-// 7. MANUALES DINÁMICOS
+// MANUALES DINÁMICOS
 function configurarManual(tipo) {
     const titulo = document.getElementById("manualTitulo");
     const cuerpo = document.getElementById("manualCuerpo");
