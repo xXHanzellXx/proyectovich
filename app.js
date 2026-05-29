@@ -317,17 +317,29 @@ function configurarManual(tipo) {
     const titulo = document.getElementById("manualTitulo");
     const cuerpo = document.getElementById("manualCuerpo");
     const contenidos = {
+
         "tecnico": {
+
             titulo: "🛠️ Manual Técnico de Arquitectura",
+
             cuerpo: `<p><b>Arquitectura del Sistema:</b> MERN-lite...</p>`
+
         },
+
         "usuario_invitado": {
+
             titulo: "📖 Guía de Navegación para Visitantes",
+
             cuerpo: `<p>¡Bienvenido a <b>ShopSystem</b>!...</p>`
+
         },
+
         "usuario_cliente": {
+
             titulo: "🛍️ Panel de Ayuda para Clientes",
+
             cuerpo: `<p>¡Hola! Has iniciado sesión correctamente...</p>`
+
         }
     };
 
