@@ -22,7 +22,7 @@
         </div>
         
         <p class="footer-text">
-            ¿No tienes cuenta? <a href="#" onclick="mostrarRegistro()">Regístrate aquí</a>
+            ¿No tienes cuenta? <a href="registro.html">Regístrate aquí</a>
         </p>
     </div>
 </div>
@@ -37,7 +37,8 @@ async function ejecutarLogin() {
     }
 
     try {
-        const res = await fetch("http://localhost:5000/login", {
+        // 🔥 CORREGIDO: Cambiado de localhost a tu servidor global en Render
+        const res = await fetch("https://proyectovich.onrender.com/login", {
             method: "POST",
             headers: {"Content-Type": "application/json"},
             body: JSON.stringify({usuario, password})
@@ -46,22 +47,17 @@ async function ejecutarLogin() {
         const data = await res.json();
 
         if(res.ok) {
-            // Guardamos el objeto completo (incluyendo el rol)
+            // Guardamos el objeto completo (incluyendo el rol que viene de Flask)
             localStorage.setItem("usuarioActual", JSON.stringify(data));
             // Redirigimos al catálogo
-            window.location.href = "catalogo.html"; 
+            window.location.href = "index.html"; 
         } else {
             alert("Error: " + (data.error || "Credenciales incorrectas"));
         }
     } catch (error) {
         console.error("Error en el login:", error);
-        alert("No se pudo conectar con el servidor. ¿Está app.py encendido?");
+        alert("No se pudo conectar con el servidor. Nota: Render duerme los servidores gratis tras 15 min de inactividad, puede tardar un minuto en reaccionar la primera vez.");
     }
-}
-
-function mostrarRegistro() {
-    alert("Función de registro: Aquí podrías redirigir a registro.html o abrir otro modal.");
-    window.location.href = "registro.html"; // Descomenta cuando lo tengas
 }
 </script>
 
