@@ -25,18 +25,24 @@ async function ejecutarRegistro() {
     const password = document.getElementById("regPassword").value;
     if (!usuario || !password) return alert("Completa los datos");
 
-    const res = await fetch("http://localhost:5000/registro", {
-        method: "POST",
-        headers: {"Content-Type": "application/json"},
-        body: JSON.stringify({ usuario, password, rol: "cliente" })
-    });
+    try {
+        // 🔥 CORREGIDO: Cambiado de localhost a tu servidor global en Render
+        const res = await fetch("https://proyectovich.onrender.com/registro", {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({ usuario, password, rol: "cliente" })
+        });
 
-    if (res.ok) {
-        alert("¡Cuenta creada! Ahora inicia sesión.");
-        window.location.href = "login.html";
-    } else {
-        const data = await res.json();
-        alert(data.error);
+        if (res.ok) {
+            alert("¡Cuenta creada! Ahora inicia sesión. 🎉");
+            window.location.href = "login.html";
+        } else {
+            const data = await res.json();
+            alert(data.error || "Error al registrar el usuario");
+        }
+    } catch (err) {
+        console.error("Error en el registro:", err);
+        alert("No se pudo conectar con el servidor backend.");
     }
 }
 </script>
