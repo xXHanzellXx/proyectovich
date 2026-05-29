@@ -104,7 +104,7 @@
             background: rgba(56, 189, 248, 0.1);
         }
 
-        /* FORMULARIO ADMIN RESPONSIVO (GRID) */
+        /* FORMULARIO ADMIN RESPONSIVO (GRID ADAPTADO CON STOCK) */
         .card {
             background: var(--surface-dark);
             border: 1px solid var(--border-glow);
@@ -130,9 +130,10 @@
             gap: 12px;
         }
 
+        /* Ajuste de columnas en computadoras para dar espacio al stock */
         @media (min-width: 768px) {
             .form-group {
-                grid-template-columns: 2fr 1fr 1fr auto;
+                grid-template-columns: 2fr 1fr 1fr 1fr auto;
                 align-items: center;
             }
         }
@@ -348,6 +349,8 @@
                     <option value="Ropa">Ropa</option>
                     <option value="Alimentos">Alimentos</option>
                 </select>
+
+                <input type="number" id="stock" min="0" placeholder="Stock disponible" value="10">
 
                 <button id="btnPrincipal" class="btn-primary" onclick="agregarProducto()">Añadir Producto</button>
             </div>
