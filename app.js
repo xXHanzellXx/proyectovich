@@ -101,13 +101,13 @@ function obtenerProductos() {
 
             tabla.innerHTML += `
                 <tr>
-                    <td>
-                        <span class="category-tag" style="display:block; font-size:10px; color:var(--primary); font-weight:bold; text-transform:uppercase;">${cat}</span>
+                    <td data-label="Producto / Categoría">
+                        <span class="category-tag" style="display:block; font-size:10px; color:var(--primary-glow); font-weight:bold; text-transform:uppercase;">${cat}</span>
                         <b>${p.nombre}</b>
                         <small style="display:block; color: gray;">Stock disponible: ${stockDisponible}</small>
                     </td>
-                    <td>₡${p.precio}</td>
-                    <td>${acciones}</td>
+                    <td data-label="Precio">₡${p.precio}</td>
+                    <td data-label="Acciones / Cantidad">${acciones}</td>
                 </tr>
             `;
         });
@@ -125,32 +125,32 @@ function agregarVarios(id, nombre, precio, stockDisponible) {
     }
 
     const inputCantidad = document.getElementById(`cant-${id}`);
-    const cantidad SOLICITADA = parseInt(inputCantidad.value);
+    const cantidadSolicitada = parseInt(inputCantidad.value); // <-- VARIABLE FIXEADA AQUÍ
 
-    if (isNaN(cantidadSOLICITADA) || cantidadSOLICITADA < 1) return;
+    if (isNaN(cantidadSolicitada) || cantidadSolicitada < 1) return;
 
     // 1. VALIDACIÓN DE STOCK: Contar cuántos de ESTE producto ya hay en el carrito
     const yaEnCarrito = carrito.filter(item => item.id === id).length;
     
-    if (yaEnCarrito + cantidadSOLICITADA > stockDisponible) {
+    if (yaEnCarrito + cantidadSolicitada > stockDisponible) {
         alert(`❌ No puedes agregar esa cantidad. Ya tienes ${yaEnCarrito} en el carrito y el stock máximo es de ${stockDisponible}.`);
         return;
     }
 
     // 2. VALIDACIÓN DE LÍMITE TOTAL DEL CARRITO
-    if (carrito.length + cantidadSOLICITADA > MAX_PRODUCTOS_CARRITO) {
+    if (carrito.length + cantidadSolicitada > MAX_PRODUCTOS_CARRITO) {
         alert(`⚠️ El carrito no puede superar los ${MAX_PRODUCTOS_CARRITO} productos en total. Espacio disponible: ${MAX_PRODUCTOS_CARRITO - carrito.length}`);
         return;
     }
 
     // Si pasa ambas validaciones, se agrega al carrito
-    for (let i = 0; i < cantidadSOLICITADA; i++) {
+    for (let i = 0; i < cantidadSolicitada; i++) {
         // Guardamos el ID para poder rastrear el stock de este producto individualmente
         carrito.push({ id, nombre, precio }); 
     }
 
     actualizarInterfazCarrito();
-    alert(`Agregado: ${nombre} (x${cantidadSOLICITADA}) 🛒`);
+    alert(`Agregado: ${nombre} (x${cantidadSolicitada}) 🛒`);
     inputCantidad.value = 1;
 }
 
@@ -171,14 +171,14 @@ function actualizarInterfazCarrito() {
         carrito.forEach((item, index) => {
             total += item.precio;
             lista.innerHTML += `
-                <div class="item-carrito" style="display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid var(--border);">
+                <div class="item-carrito" style="display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid var(--border-glow);">
                     <span>${item.nombre}</span>
-                    <span><b>₡${item.precio}</b> <button onclick="eliminarDelCarrito(${index})" style="background:none; color:red; margin-left:8px;">✕</button></span>
+                    <span><b>₡${item.precio}</b> <button onclick="eliminarDelCarrito(${index})" style="background:none; color:red; margin-left:8px; border:none; cursor:pointer;">✕</button></span>
                 </div>
             `;
         });
     }
-    if (totalSpan) totalSpan.innerText = `Total: ₡${total}`;
+    if (totalSpan) totalSpan.innerText = `₡${total}`;
 }
 
 function eliminarDelCarrito(index) {
@@ -202,7 +202,7 @@ function agregarProducto() {
     const nombre = document.getElementById("nombre").value;
     const precio = document.getElementById("precio").value;
     const categoria = document.getElementById("categoria").value;
-    const stock = document.getElementById("stock") ? document.getElementById("stock").value : 10; // Por si añades el input en tu HTML
+    const stock = document.getElementById("stock") ? document.getElementById("stock").value : 10;
 
     if (!nombre || !precio) return alert("Completa los campos");
 
@@ -235,7 +235,6 @@ function prepararEdicion(id, nombre, precio, categoria, stock) {
     document.getElementById("precio").value = precio;
     document.getElementById("categoria").value = categoria;
     
-    // Si tienes un input con id="stock" en tu formulario de administrador:
     if (document.getElementById("stock")) {
         document.getElementById("stock").value = stock;
     }
@@ -267,7 +266,7 @@ function enviarEdicion(id) {
     .catch(err => console.error("Error al actualizar:", err));
 }
 
-// MANUALES DINÁMICOS Y OTROS (Se mantienen igual...)
+// MANUALES DINÁMICOS Y OTROS
 function configurarManual(tipo) {
     const titulo = document.getElementById("manualTitulo");
     const cuerpo = document.getElementById("manualCuerpo");
@@ -301,7 +300,7 @@ function resetFormulario() {
     document.getElementById("nombre").value = "";
     document.getElementById("precio").value = "";
     document.getElementById("categoria").value = "General";
-    if (document.getElementById("stock")) document.getElementById("stock").value = "";
+    if (document.getElementById("stock")) document.getElementById("stock").value = "10";
     
     const btn = document.getElementById("btnPrincipal");
     if (btn) {
