@@ -1,406 +1,203 @@
 <!DOCTYPE html>
-
 <html lang="es">
-
 <head>
-
     <meta charset="UTF-8">
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>ShopSystem | Consola de Gestión</title>
-
     <link rel="stylesheet" href="styles.css">
-
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
     <style>
-
         :root {
-
             --bg-dark: #0f172a;
-
             --surface-dark: #1e293b;
-
             --primary-glow: #38bdf8;
-
             --text-muted: #94a3b8;
-
             --border-glow: #334155;
-
         }
-
-
 
         body {
-
             background-color: var(--bg-dark);
-
             font-family: 'Segoe UI', system-ui, sans-serif;
-
             color: #f8fafc;
-
             margin: 0;
-
             min-height: 100vh;
-
             display: flex;
-
             align-items: center;
-
             justify-content: center;
-
         }
-
-
 
         .hero-panel {
-
             background: var(--surface-dark);
-
             border: 1px solid var(--border-glow);
-
             border-radius: 24px;
-
             padding: 50px 40px;
-
             max-width: 900px;
-
             width: 90%;
-
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
-
             text-align: center;
-
             position: relative;
-
             overflow: hidden;
-
         }
-
-
 
         /* Indicador de estado del Servidor */
-
         .status-badge {
-
             display: inline-flex;
-
             align-items: center;
-
             gap: 8px;
-
             background: rgba(56, 189, 248, 0.1);
-
             color: var(--primary-glow);
-
             padding: 6px 16px;
-
             border-radius: 100px;
-
             font-size: 0.85rem;
-
             font-weight: 600;
-
             letter-spacing: 0.5px;
-
             margin-bottom: 24px;
-
             border: 1px solid rgba(56, 189, 248, 0.2);
-
         }
-
-
 
         .status-dot {
-
             width: 8px;
-
             height: 8px;
-
             background-color: #22c55e;
-
             border-radius: 50%;
-
             box-shadow: 0 0 10px #22c55e;
-
             animation: pulse 2s infinite;
-
         }
-
-
 
         @keyframes pulse {
-
             0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7); }
-
             70% { transform: scale(1); box-shadow: 0 0 0 8px rgba(34, 197, 94, 0); }
-
             100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
-
         }
-
-
 
         .hero-panel h1 {
-
             font-size: 3rem;
-
             font-weight: 800;
-
             margin: 0 0 12px 0;
-
             background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 100%);
-
             -webkit-background-clip: text;
-
             -webkit-text-fill-color: transparent;
-
             letter-spacing: -1px;
-
         }
-
-
 
         .hero-panel p.subtitle {
-
             font-size: 1.15rem;
-
             color: var(--text-muted);
-
             max-width: 600px;
-
             margin: 0 auto 40px auto;
-
             line-height: 1.6;
-
         }
-
-
 
         /* Botón de Acceso Principal */
-
         .btn-primary {
-
             background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
-
             color: white;
-
             border: none;
-
             padding: 16px 40px;
-
             font-size: 1.1rem;
-
             font-weight: 600;
-
             border-radius: 12px;
-
             cursor: pointer;
-
             transition: all 0.3s ease;
-
             box-shadow: 0 4px 20px rgba(2, 132, 199, 0.3);
-
             display: inline-flex;
-
             align-items: center;
-
             gap: 12px;
-
         }
-
-
 
         .btn-primary:hover {
-
             transform: translateY(-2px);
-
             box-shadow: 0 6px 24px rgba(2, 132, 199, 0.5);
-
             background: linear-gradient(135deg, #38bdf8 0%, #0284c7 100%);
-
         }
-
-
 
         /* Grid Tecnológico */
-
         .tech-grid {
-
             display: grid;
-
             grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-
             gap: 20px;
-
             margin-top: 50px;
-
             border-top: 1px solid var(--border-glow);
-
             padding-top: 40px;
-
         }
-
-
 
         .tech-card {
-
             background: #151f32;
-
             padding: 24px;
-
             border-radius: 16px;
-
             border: 1px solid rgba(255, 255, 255, 0.03);
-
             text-align: left;
-
             transition: transform 0.3s ease;
-
         }
-
-
 
         .tech-card:hover {
-
             transform: translateY(-4px);
-
             border-color: rgba(56, 189, 248, 0.2);
-
         }
-
-
 
         .tech-card i {
-
             font-size: 1.8rem;
-
             color: var(--primary-glow);
-
             margin-bottom: 16px;
-
         }
-
-
 
         .tech-card h3 {
-
             font-size: 1.1rem;
-
             font-weight: 600;
-
             margin: 0 0 8px 0;
-
             color: #f1f5f9;
-
         }
-
-
 
         .tech-card p {
-
             font-size: 0.9rem;
-
             color: var(--text-muted);
-
             margin: 0;
-
             line-height: 1.5;
-
         }
-
     </style>
-
 </head>
-
 <body>
 
-
-
-<div class="hero-panel">
-
-    <div class="status-badge">
-
-        <div class="status-dot"></div>
-
-        <span>SYSTEM ONLINE // CLOUD LIVE</span>
-
-    </div>
-
-
-
-    <h1>ShopSystem</h1>
-
-    <p class="subtitle">Consola centralizada para la administración automatizada de catálogos, control de inventario y sincronización persistente en la nube.</p>
-
-    
-
-    <button class="btn-primary" onclick="window.location.href='catalogo.html'">
-
-        <span>Acceder a la Consola</span>
-
-        <i class="fa-solid fa-arrow-right"></i>
-
-    </button>
-
-
-
-    <div class="tech-grid">
-
-        <div class="tech-card">
-
-            <i class="fa-solid fa-cloud-bolt"></i>
-
-            <h3>Persistencia NoSQL</h3>
-
-            <p>Estructura de datos optimizada e indexada directamente en la nube mediante clústeres de MongoDB Atlas.</p>
-
+    <div class="hero-panel">
+        <div class="status-badge">
+            <div class="status-dot"></div>
+            <span>SYSTEM ONLINE // CLOUD LIVE</span>
         </div>
 
-        <div class="tech-card">
+        <h1>ShopSystem</h1>
+        <p class="subtitle">Consola centralizada para la administración automatizada de catálogos, control de inventario y sincronización persistente en la nube.</p>
+        
+        <button class="btn-primary" onclick="window.location.href='catalogo.html'">
+            <span>Acceder a la Consola</span>
+            <i class="fa-solid fa-arrow-right"></i>
+        </button>
 
-            <i class="fa-solid fa-code"></i>
-
-            <h3>RESTful Engine</h3>
-
-            <p>Capa asíncrona de backend desarrollada en Python/Flask, desplegada de manera segura en Render.</p>
-
+        <div class="tech-grid">
+            <div class="tech-card">
+                <i class="fa-solid fa-cloud-bolt"></i>
+                <h3>Persistencia NoSQL</h3>
+                <p>Estructura de datos optimizada e indexada directamente en la nube mediante clústeres de MongoDB Atlas.</p>
+            </div>
+            <div class="tech-card">
+                <i class="fa-solid fa-code"></i>
+                <h3>RESTful Engine</h3>
+                <p>Capa asíncrona de backend desarrollada en Python/Flask, desplegada de manera segura en Render.</p>
+            </div>
+            <div class="tech-card">
+                <i class="fa-solid fa-sliders"></i>
+                <h3>Control Operativo</h3>
+                <p>Interfaz intuitiva para procesar transacciones CRUD (altas, bajas y actualizaciones masivas) en tiempo real.</p>
+            </div>
         </div>
-
-        <div class="tech-card">
-
-            <i class="fa-solid fa-sliders"></i>
-
-            <h3>Control Operativo</h3>
-
-            <p>Interfaz intuitiva para procesar transacciones CRUD (altas, bajas y actualizaciones masivas) en tiempo real.</p>
-
-        </div>
-
     </div>
 
-</div>
-
-
-
-<div id="modalManual" class="modal">
-
-    <div class="modal-content">
-
-        <span class="close">&times;</span>
-
-        <h2 id="manualTitulo" class="manual-titulo"></h2>
-
-        <div id="manualCuerpo" class="manual-cuerpo"></div>
-
+    <div id="modalManual" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2 id="manualTitulo" class="manual-titulo"></h2>
+            <div id="manualCuerpo" class="manual-cuerpo"></div>
+        </div>
     </div>
-
-</div>
-
-
 
 </body>
-
 </html>
-
