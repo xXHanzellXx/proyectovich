@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>ShopSystem - Registro</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="container-login">
+    <div class="card">
+        <h2>📝 Crear Cuenta</h2>
+        <hr>
+        <div class="form-group">
+            <input type="text" id="regUsuario" placeholder="Usuario nuevo">
+            <input type="password" id="regPassword" placeholder="Contraseña">
+            <button class="btn-login" onclick="ejecutarRegistro()">Registrarse</button>
+        </div>
+        <p class="footer-text">¿Ya tienes cuenta? <a href="login.html">Loguéate</a></p>
+    </div>
+</div>
+
+<script>
+async function ejecutarRegistro() {
+    const usuario = document.getElementById("regUsuario").value;
+    const password = document.getElementById("regPassword").value;
+    if (!usuario || !password) return alert("Completa los datos");
+
+    const res = await fetch("http://localhost:5000/registro", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({ usuario, password, rol: "cliente" })
+    });
+
+    if (res.ok) {
+        alert("¡Cuenta creada! Ahora inicia sesión.");
+        window.location.href = "login.html";
+    } else {
+        const data = await res.json();
+        alert(data.error);
+    }
+}
+</script>
+</body>
+</html>

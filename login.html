@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>ShopSystem - Login</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="container-login">
+    <div class="card">
+        <h2>🔐 Entrar al Sistema</h2>
+        <hr>
+        <div class="form-group">
+            <label for="userLogin">Usuario:</label>
+            <input type="text" id="userLogin" placeholder="Panchito">
+            
+            <label for="passLogin">Contraseña:</label>
+            <input type="password" id="passLogin" placeholder="••••••••">
+            
+            <button class="btn-login" onclick="ejecutarLogin()">Ingresar</button>
+        </div>
+        
+        <p class="footer-text">
+            ¿No tienes cuenta? <a href="#" onclick="mostrarRegistro()">Regístrate aquí</a>
+        </p>
+    </div>
+</div>
+
+<script>
+async function ejecutarLogin() {
+    const usuario = document.getElementById("userLogin").value;
+    const password = document.getElementById("passLogin").value;
+
+    if (!usuario || !password) {
+        return alert("Por favor, completa todos los campos");
+    }
+
+    try {
+        const res = await fetch("http://localhost:5000/login", {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({usuario, password})
+        });
+
+        const data = await res.json();
+
+        if(res.ok) {
+            // Guardamos el objeto completo (incluyendo el rol)
+            localStorage.setItem("usuarioActual", JSON.stringify(data));
+            // Redirigimos al catálogo
+            window.location.href = "catalogo.html"; 
+        } else {
+            alert("Error: " + (data.error || "Credenciales incorrectas"));
+        }
+    } catch (error) {
+        console.error("Error en el login:", error);
+        alert("No se pudo conectar con el servidor. ¿Está app.py encendido?");
+    }
+}
+
+function mostrarRegistro() {
+    alert("Función de registro: Aquí podrías redirigir a registro.html o abrir otro modal.");
+    window.location.href = "registro.html"; // Descomenta cuando lo tengas
+}
+</script>
+
+</body>
+</html>
