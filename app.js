@@ -1,4 +1,8 @@
-const API = "https://proyectovich.onrender.com";
+// La raíz de tu servidor en Render
+const API_BASE = "https://proyectovich.onrender.com";
+
+// El endpoint específico que va a buscar los datos a la base de datos
+const API_PRODUCTOS = `${API_BASE}/productos`;
 let carrito = [];
 
 // 1. INICIALIZACIÓN
