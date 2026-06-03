@@ -66,7 +66,17 @@ function verificarSesion() {
     // Muestra el nombre del usuario activo si existe el elemento en el HTML
     if (infoUsuario) {
       infoUsuario.style.display = "inline-block";
-      infoUsuario.innerHTML = `👤 Hola, <b>${user.nombre || user.usuario || "Cliente"}</b>`;
+      infoUsuario.innerHTML = `
+    <img
+        src="${user.imagen || "https://placehold.co/40"}"
+        class="foto-usuario"
+    >
+
+    <div>
+        <b>${user.nombre}</b><br>
+        <small>${user.correo}</small>
+    </div>
+`;
     }
 
     if (user.rol === "admin") {
@@ -163,7 +173,7 @@ ${stockDisponible},
             acciones = `
                         <div class="flex gap-2 items-center">
                             <input type="number" id="cant-${p._id}" value="1" min="1" max="${stockDisponible}" style="width: 55px;">
-                            <button class="btn-add-cart" onclick="agregarVarios('${p._id}', '${p.nombre}', ${p.precio}, ${stockDisponible})"> Añadir</button>
+                            <button class="btn-add-cart" onclick="agregarVarios('${p._id}', '${p.nombre}', ${p.precio}, ${stockDisponible},'${p.imagen || ""}')"> Añadir</button>
                         </div>
                     `;
           }
@@ -194,7 +204,7 @@ ${stockDisponible},
 }
 
 // CARRITO MODIFICADO (Guarda objetos con cantidad integrada)
-function agregarVarios(id, nombre, precio, stockDisponible) {
+function agregarVarios(id, nombre, precio, stockDisponible, imagen) {
   const user = localStorage.getItem("usuarioActual");
   if (!user) {
     alert("Debes iniciar sesión para comprar.");
@@ -231,7 +241,13 @@ function agregarVarios(id, nombre, precio, stockDisponible) {
   if (productoEnCarrito) {
     productoEnCarrito.cantidad += cantidadSolicitada;
   } else {
-    carrito.push({ id, nombre, precio, cantidad: cantidadSolicitada });
+    carrito.push({
+      id,
+      nombre,
+      precio,
+      cantidad: cantidadSolicitada,
+      imagen,
+    });
   }
 
   guardarCarrito();
@@ -262,7 +278,22 @@ function actualizarInterfazCarrito() {
       total += subtotalItem;
       lista.innerHTML += `
                 <div class="item-carrito" style="display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid var(--border-glow); align-items: center;">
-                    <span>${item.nombre} <b>(x${item.cantidad})</b></span>
+                    <div style="display:flex;align-items:center;gap:10px;">
+  <img
+    src="${item.imagen || "https://placehold.co/50x50"}"
+    style="
+      width:45px;
+      height:45px;
+      object-fit:cover;
+      border-radius:6px;
+    "
+  >
+
+  <span>
+    ${item.nombre}
+    <b>(x${item.cantidad})</b>
+  </span>
+</div>
                     <span><b>₡${subtotalItem}</b> <button onclick="eliminarDelCarrito(${index})" style="background:none; color:red; margin-left:8px; border:none; cursor:pointer;">✕</button></span>
                 </div>
             `;
@@ -586,24 +617,57 @@ function mostrarHistorial() {
   const historial = obtenerHistorialCompras();
 
   if (historial.length === 0) {
-    return alert("No hay compras registradas.");
+    alert("No hay compras registradas.");
+    return;
   }
 
-  let texto = "HISTORIAL DE COMPRAS\n\n";
+  const contenedor = document.getElementById("contenidoHistorial");
+
+  let html = "";
 
   historial.forEach((compra, index) => {
-    texto += `Compra #${index + 1}\n`;
-    texto += `Fecha: ${compra.fecha}\n`;
-    texto += `Total: ₡${compra.total}\n`;
+    html += `
+      <div class="historial-compra">
+        <h3>Compra #${index + 1}</h3>
+
+        <p>
+          <strong>Fecha:</strong>
+          ${compra.fecha}
+        </p>
+
+        <p>
+          <strong>Total:</strong>
+          ₡${compra.total.toLocaleString()}
+        </p>
+
+        <div class="historial-productos">
+    `;
 
     compra.productos.forEach((p) => {
-      texto += ` - ${p.nombre} x${p.cantidad}\n`;
+      html += `
+        <div class="producto-historial">
+          <img
+            src="${p.imagen || "https://placehold.co/60x60"}"
+            alt="${p.nombre}"
+          >
+
+          <div>
+            <strong>${p.nombre}</strong><br>
+            Cantidad: ${p.cantidad}
+          </div>
+        </div>
+      `;
     });
 
-    texto += "\n";
+    html += `
+        </div>
+      </div>
+    `;
   });
 
-  alert(texto);
+  contenedor.innerHTML = html;
+
+  abrirModal("modalHistorial");
 }
 
 async function cargarDashboardAdmin() {
