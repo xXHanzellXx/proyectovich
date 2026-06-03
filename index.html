@@ -1,19 +1,30 @@
 <!DOCTYPE html>
 <html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistema de Compras | Consola de Gestión</title>
-    <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        :root {
-            --bg-dark: #0f172a;
-            --surface-dark: #1e293b;
-            --primary-glow: #38bdf8;
-            --text-muted: #94a3b8;
-            --border-glow: #334155;
-        }
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Sistema de Compras | Consola de Gestión</title>
+        <link rel="stylesheet" href="styles.css">
+        <link rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+        <style>
+        :root{
+  --bg-main: #f8fafc;
+  --bg-card: #ffffff;
+
+  --primary: #2563eb;
+  --primary-hover: #1d4ed8;
+
+  --secondary: #64748b;
+
+  --success: #16a34a;
+  --danger: #dc2626;
+
+  --border: #dbeafe;
+
+  --text-main: #0f172a;
+  --text-muted: #64748b;
+}
 
         body {
             background-color: var(--bg-dark);
@@ -74,7 +85,7 @@
             font-size: 3rem;
             font-weight: 800;
             margin: 0 0 12px 0;
-            background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 100%);
+            background: linear-gradient(135deg, #972323 0%, #24456d 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             letter-spacing: -1px;
@@ -155,49 +166,56 @@
             line-height: 1.5;
         }
     </style>
-</head>
-<body>
+    </head>
+    <body>
 
-    <div class="hero-panel">
-        <div class="status-badge">
-            <div class="status-dot"></div>
-            <span>SISTEMA ENCENDIDO // NUBE ACTIVA</span>
+        <div class="hero-panel">
+            <div class="status-badge">
+                <div class="status-dot"></div>
+                <span>SISTEMA ENCENDIDO // NUBE ACTIVA</span>
+            </div>
+
+            <h1>Sistema de Compras</h1>
+            <p class="subtitle">Consola centralizada para la administración
+                automatizada de catálogos, control de inventario y
+                sincronización persistente en la nube.</p>
+
+            <button class="btn-primary"
+                onclick="window.location.href='catalogo.html'">
+                <span>Acceder a la Consola</span>
+                <i class="fa-solid fa-arrow-right"></i>
+            </button>
+
+            <div class="tech-grid">
+                <div class="tech-card">
+                    <i class="fa-solid fa-cloud-bolt"></i>
+                    <h3>Persistencia NoSQL</h3>
+                    <p>Estructura de datos optimizada e indexada directamente en
+                        la nube mediante clústeres de MongoDB Atlas.</p>
+                </div>
+                <div class="tech-card">
+                    <i class="fa-solid fa-code"></i>
+                    <h3>RESTful Engine</h3>
+                    <p>Capa asíncrona de backend desarrollada en Python/Flask,
+                        desplegada de manera segura en Render.</p>
+                </div>
+                <div class="tech-card">
+                    <i class="fa-solid fa-sliders"></i>
+                    <h3>Control Operativo</h3>
+                    <p>Interfaz intuitiva para procesar transacciones CRUD
+                        (altas, bajas y actualizaciones masivas) en tiempo
+                        real.</p>
+                </div>
+            </div>
         </div>
 
-        <h1>Sistema de Compras</h1>
-        <p class="subtitle">Consola centralizada para la administración automatizada de catálogos, control de inventario y sincronización persistente en la nube.</p>
-        
-        <button class="btn-primary" onclick="window.location.href='catalogo.html'">
-            <span>Acceder a la Consola</span>
-            <i class="fa-solid fa-arrow-right"></i>
-        </button>
-
-        <div class="tech-grid">
-            <div class="tech-card">
-                <i class="fa-solid fa-cloud-bolt"></i>
-                <h3>Persistencia NoSQL</h3>
-                <p>Estructura de datos optimizada e indexada directamente en la nube mediante clústeres de MongoDB Atlas.</p>
-            </div>
-            <div class="tech-card">
-                <i class="fa-solid fa-code"></i>
-                <h3>RESTful Engine</h3>
-                <p>Capa asíncrona de backend desarrollada en Python/Flask, desplegada de manera segura en Render.</p>
-            </div>
-            <div class="tech-card">
-                <i class="fa-solid fa-sliders"></i>
-                <h3>Control Operativo</h3>
-                <p>Interfaz intuitiva para procesar transacciones CRUD (altas, bajas y actualizaciones masivas) en tiempo real.</p>
+        <div id="modalManual" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2 id="manualTitulo" class="manual-titulo"></h2>
+                <div id="manualCuerpo" class="manual-cuerpo"></div>
             </div>
         </div>
-    </div>
 
-    <div id="modalManual" class="modal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <h2 id="manualTitulo" class="manual-titulo"></h2>
-            <div id="manualCuerpo" class="manual-cuerpo"></div>
-        </div>
-    </div>
-
-</body>
+    </body>
 </html>

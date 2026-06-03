@@ -1,25 +1,36 @@
 <!DOCTYPE html>
 <html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistema de Compras - Gestión de Productos</title>
-    <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        :root {
-            --bg-dark: #0f172a;
-            --surface-dark: #1e293b;
-            --primary-glow: #38bdf8;
-            --text-muted: #94a3b8;
-            --border-glow: #334155;
-            --input-bg: #0f172a;
-            --success: #22c55e;
-        }
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Sistema de Compras - Gestión de Productos</title>
+        <link rel="stylesheet" href="styles.css">
+        <link rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+        <style>
+        :root{
+  --bg-main: #f8fafc;
+  --bg-card: #ffffff;
+
+  --primary: #2563eb;
+  --primary-hover: #1d4ed8;
+
+  --secondary: #64748b;
+
+  --success: #16a34a;
+  --danger: #dc2626;
+
+  --border: #dbeafe;
+
+  --text-main: #0f172a;
+  --text-muted: #64748b;
+}
 
         body {
             background-color: var(--bg-dark);
+            /* ACCESIBILIDAD: Fuente base más grande y legible para descanso visual */
             font-family: 'Segoe UI', system-ui, sans-serif;
+            font-size: 17px; 
             color: #f8fafc;
             margin: 0;
             padding: 20px;
@@ -57,20 +68,47 @@
         }
 
         .header-flex h2 {
-            font-size: 1.8rem;
+            font-size: 1.9rem;
             font-weight: 800;
             margin: 0;
-            background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 100%);
+            background: linear-gradient(135deg, #972323 0%, #24456d 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
         #authButtons {
             display: flex;
-            gap: 10px;
+            align-items: center;
+            gap: 12px;
             width: 100%;
             justify-content: center;
         }
+
+        .dashboard-admin{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+    gap:15px;
+    margin-bottom:25px;
+}
+
+.card-dashboard{
+    background:#1e293b;
+    border:1px solid #334155;
+    border-radius:12px;
+    padding:20px;
+    text-align:center;
+}
+
+.card-dashboard h3{
+    margin:0 0 10px 0;
+    font-size:1rem;
+}
+
+.card-dashboard span{
+    font-size:1.8rem;
+    font-weight:bold;
+    color:#38bdf8;
+}
 
         @media (min-width: 640px) {
             #authButtons {
@@ -78,10 +116,22 @@
             }
         }
 
+        /* DISEÑO DE USUARIO ACTIVO */
+        .user-pill {
+            background: rgba(56, 189, 248, 0.1);
+            border: 1px solid rgba(56, 189, 248, 0.2);
+            color: var(--primary-glow);
+            padding: 8px 14px;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            display: none;
+        }
+
         .btn-nav, .btn-logout {
             background: rgba(255, 255, 255, 0.05);
             border: 1px solid var(--border-glow);
-            color: #f8fafc;
+            color: #000000;
             padding: 10px 16px;
             border-radius: 8px;
             font-weight: 600;
@@ -104,7 +154,40 @@
             background: rgba(56, 189, 248, 0.1);
         }
 
-        /* FORMULARIO ADMIN RESPONSIVO (GRID ADAPTADO CON STOCK) */
+        /* CONTROL DE FILTROS Y BUSCADOR */
+        .filter-bar {
+            background: var(--surface-dark);
+            border: 1px solid var(--border-glow);
+            border-radius: 12px;
+            padding: 15px;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+        }
+
+        @media (min-width: 640px) {
+            .filter-bar {
+                grid-template-columns: 2fr 1fr;
+            }
+        }
+
+        .search-wrapper {
+            position: relative;
+        }
+
+        .search-wrapper i {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+        }
+
+        .search-wrapper input {
+            padding-left: 38px !important;
+        }
+
+        /* FORMULARIO ADMIN RESPONSIVO */
         .card {
             background: var(--surface-dark);
             border: 1px solid var(--border-glow);
@@ -115,11 +198,11 @@
 
         .card h3 {
             margin: 0 0 5px 0;
-            font-size: 1.25rem;
+            font-size: 1.35rem;
         }
 
         .text-sm {
-            font-size: 0.85rem;
+            font-size: 0.9rem;
             color: var(--text-muted);
             margin-bottom: 20px;
         }
@@ -130,10 +213,10 @@
             gap: 12px;
         }
 
-        /* Ajuste de columnas en computadoras para dar espacio al stock */
+        /* Ajuste para 6 columnas debido a la imagen en computadoras */
         @media (min-width: 768px) {
             .form-group {
-                grid-template-columns: 2fr 1fr 1fr 1fr auto;
+                grid-template-columns: 2fr 1fr 1fr 1fr 2fr auto;
                 align-items: center;
             }
         }
@@ -174,7 +257,7 @@
             }
         }
 
-        /* TABLA MÓVIL ADAPTATIVA INTELIGENTE */
+        /* TABLA MÓVIL ADAPTATIVA */
         .table-wrap {
             background: var(--surface-dark);
             border: 1px solid var(--border-glow);
@@ -187,7 +270,6 @@
             border-collapse: collapse;
         }
 
-        /* Esconder cabecera de tabla tradicional en móviles */
         @media (max-width: 639px) {
             table, thead, tbody, th, td, tr {
                 display: block;
@@ -202,46 +284,45 @@
             }
             td {
                 border: none;
-                padding: 6px 10px;
+                padding: 8px 10px;
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
                 text-align: right;
-                font-size: 0.95rem;
+                font-size: 1rem;
             }
-            /* Generar etiquetas dinámicas simulando columnas */
             td::before {
                 content: attr(data-label);
                 float: left;
                 font-weight: 600;
                 color: var(--text-muted);
                 text-transform: uppercase;
-                font-size: 0.8rem;
+                font-size: 0.85rem;
             }
         }
 
-        /* Estilos de tabla para pantallas grandes */
         @media (min-width: 640px) {
             th {
                 background: rgba(15, 23, 42, 0.5);
                 color: var(--text-muted);
                 font-weight: 600;
-                padding: 14px 20px;
-                font-size: 0.85rem;
+                padding: 16px 20px;
+                font-size: 0.9rem;
                 text-transform: uppercase;
                 border-bottom: 1px solid var(--border-glow);
                 text-align: left;
             }
             td {
-                padding: 14px 20px;
+                padding: 16px 20px;
                 border-bottom: 1px solid rgba(51, 65, 85, 0.4);
+                font-size: 1.05rem;
             }
             tr:hover td {
                 background: rgba(255, 255, 255, 0.01);
             }
         }
 
-        /* MODALES RESPONSIVOS */
+        /* MODALES */
         .modal {
             display: none;
             position: fixed;
@@ -313,98 +394,168 @@
         #contadorCarrito {
             background: white;
             color: #0f172a;
-            font-size: 0.7rem;
+            font-size: 0.75rem;
             font-weight: bold;
-            padding: 1px 5px;
+            padding: 2px 6px;
             border-radius: 10px;
             position: absolute;
             top: 6px; right: 4px;
         }
     </style>
-</head>
-<body>
+    </head>
+    <body>
 
-<div class="container">
-    <div class="header-flex">
-        <h2>Sistema de Compras - Inventario</h2>
-        <div id="authButtons">
-            <button id="btnLoginNav" class="btn-nav" onclick="window.location.href='login.html'">Iniciar Sesión</button>
-            <button id="btnRegistroNav" class="btn-nav" onclick="window.location.href='registro.html'">Registrarse</button>
-            <button id="btnLogut" class="btn-logout" onclick="logout()" style="display:none;">Cerrar Sesión</button>
-        </div>
-    </div>
+        <div class="container">
+            <div class="header-flex">
+                <h2>Sistema de Compras - Inventario</h2>
+                <div id="authButtons">
+                    <div id="infoUsuario" class="user-pill"></div>
 
-    <div id="seccionAdmin" style="display:none;">
-        <div class="card">
-            <h3>🛠️ Panel de Administración</h3>
-            <p class="text-sm">Agregar o editar productos en la base de datos.</p>
-            <div class="form-group">
-                <input type="text" id="nombre" placeholder="Nombre del producto">
-                <input type="number" id="precio" placeholder="Precio (₡)">
-                
-                <select id="categoria">
-                    <option value="General">General</option>
-                    <option value="Electrónica">Electrónica</option>
-                    <option value="Hogar">Hogar</option>
-                    <option value="Ropa">Ropa</option>
-                    <option value="Alimentos">Alimentos</option>
-                </select>
+                    <button
+                        id="btnHistorial"
+                        onclick="mostrarHistorial()"
+                        style="display:none;">
+                        Historial
+                    </button>
+                    <button id="btnLoginNav" class="btn-nav"
+                        onclick="window.location.href='login.html'">Iniciar
+                        Sesión</button>
+                    <button id="btnRegistroNav" class="btn-nav"
+                        onclick="window.location.href='registro.html'">Registrarse</button>
+                    <button id="btnLogut" class="btn-logout" onclick="logout()"
+                        style="display:none;">Cerrar Sesión</button>
+                </div>
+            </div>
 
-                <input type="number" id="stock" min="0" placeholder="Stock disponible" value="10">
+            <div id="seccionAdmin" style="display:none;">
+                <div class="card">
+                    <h3>🛠️ Panel de Administración</h3>
+                    <p class="text-sm">Agregar o editar productos en la base de
+                        datos.</p>
+                    <div class="form-group">
+                        <input type="text" id="nombre"
+                            placeholder="Nombre del producto">
+                        <input type="number" id="precio"
+                            placeholder="Precio (₡)">
 
-                <button id="btnPrincipal" class="btn-primary" onclick="agregarProducto()">Añadir Producto</button>
+                        <select id="categoria">
+                            <option value="General">General</option>
+                            <option value="Electrónica">Electrónica</option>
+                            <option value="Hogar">Hogar</option>
+                            <option value="Ropa">Ropa</option>
+                            <option value="Alimentos">Alimentos</option>
+                        </select>
+
+                        <input type="number" id="stock" min="0"
+                            placeholder="Stock" value="10">
+                        <input type="file" id="imagen" accept="image/*">
+
+                        <button id="btnPrincipal" class="btn-primary"
+                            onclick="agregarProducto()">Añadir</button>
+                    </div>
+                </div>
+                <div id="dashboardAdmin" class="dashboard-admin">
+                    <div class="card-dashboard">
+                        <h3>Productos</h3>
+                        <span id="totalProductos">0</span>
+                    </div>
+
+                    <div class="card-dashboard">
+                        <h3>Usuarios</h3>
+                        <span id="totalUsuarios">0</span>
+                    </div>
+
+                    <div class="card-dashboard">
+                        <h3>Compras</h3>
+                        <span id="totalCompras">0</span>
+                    </div>
+
+                    <div class="card-dashboard">
+                        <h3>Ventas</h3>
+                        <span id="totalVentas">₡0</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="filter-bar">
+                <div class="search-wrapper">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="text" id="inputBuscar"
+                        placeholder="Buscar producto por nombre...">
+                </div>
+                <div>
+                    <select id="selectCategoria">
+                        <option value="Todos">Todas las Categorías</option>
+                        <option value="General">General</option>
+                        <option value="Electrónica">Electrónica</option>
+                        <option value="Hogar">Hogar</option>
+                        <option value="Ropa">Ropa</option>
+                        <option value="Alimentos">Alimentos</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Producto / Categoría</th>
+                            <th>Precio</th>
+                            <th>Acciones / Cantidad</th>
+                        </tr>
+                    </thead>
+                    <tbody id="cuerpoTabla"></tbody>
+                </table>
             </div>
         </div>
-    </div>
 
-    <div class="table-wrap">
-        <table>
-            <thead>
-                <tr>
-                    <th>Producto / Categoría</th>
-                    <th>Precio</th>
-                    <th>Acciones / Cantidad</th>
-                </tr>
-            </thead>
-            <tbody id="cuerpoTabla">
-                </tbody>
-        </table>
-    </div>
-</div>
-
-<div id="modalManual" class="modal">
-    <div class="modal-content">
-        <button class="close" onclick="cerrarModal('modalManual')">&times;</button>
-        <h2 id="manualTitulo" style="color: var(--primary-glow); margin-top: 0;"></h2>
-        <hr style="border: none; height: 1px; background: var(--border-glow); margin: 15px 0;">
-        <div id="manualCuerpo"></div>
-    </div>
-</div>
-
-<div id="modalCarrito" class="modal">
-    <div class="modal-content">
-        <button class="close" onclick="cerrarModal('modalCarrito')">&times;</button>
-        <h2 style="margin-top: 0;">🛒 Tu Carrito de Compras</h2>
-        <hr style="border: none; height: 1px; background: var(--border-glow); margin: 15px 0;">
-        <div id="listaCarrito">
-            <p class="text-sm" style="text-align: center;">El carrito está vacío.</p>
-        </div>
-        <div class="carrito-footer" style="margin-top: 20px; border-top: 1px solid var(--border-glow); padding-top: 15px;">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-                <span style="font-weight: 600; color: var(--text-muted);">Total:</span>
-                <b id="totalCarrito" style="font-size: 1.3rem; color: var(--success);">₡0</b>
+        <div id="modalManual" class="modal">
+            <div class="modal-content">
+                <button class="close"
+                    onclick="cerrarModal('modalManual')">&times;</button>
+                <h2 id="manualTitulo"
+                    style="color: var(--primary-glow); margin-top: 0;"></h2>
+                <hr
+                    style="border: none; height: 1px; background: var(--border-glow); margin: 15px 0;">
+                <div id="manualCuerpo"></div>
             </div>
-            <button class="btn-primary" style="width: 100%; background: var(--success);" onclick="finalizarCompra()">Finalizar Compra</button>
         </div>
-    </div>
-</div>
 
-<button id="btnManual" title="Ayuda" onclick="abrirModal('modalManual')">?</button>
+        <div id="modalCarrito" class="modal">
+            <div class="modal-content">
+                <button class="close"
+                    onclick="cerrarModal('modalCarrito')">&times;</button>
+                <h2 style="margin-top: 0;">🛒 Tu Carrito de Compras</h2>
+                <hr
+                    style="border: none; height: 1px; background: var(--border-glow); margin: 15px 0;">
+                <div id="listaCarrito">
+                    <p class="text-sm" style="text-align: center;">El carrito
+                        está vacío.</p>
+                </div>
+                <div class="carrito-footer"
+                    style="margin-top: 20px; border-top: 1px solid var(--border-glow); padding-top: 15px;">
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                        <span
+                            style="font-weight: 600; color: var(--text-muted);">Total:</span>
+                        <b id="totalCarrito"
+                            style="font-size: 1.3rem; color: var(--success);">₡0</b>
+                    </div>
+                    <button class="btn-primary"
+                        style="width: 100%; background: var(--success);"
+                        onclick="finalizarCompra()">Finalizar Compra</button>
+                </div>
+            </div>
+        </div>
 
-<button id="btnCarritoFlotante" class="btn-carrito-flotante" onclick="abrirModal('modalCarrito')">
-    🛒 <span id="contadorCarrito">0</span>
-</button>
+        <button id="btnManual" title="Ayuda"
+            onclick="abrirModal('modalManual')">?</button>
 
-<script src="app.js?v=1.3"></script>
-</body>
+        <button id="btnCarritoFlotante" class="btn-carrito-flotante"
+            onclick="abrirModal('modalCarrito')">
+            🛒 <span id="contadorCarrito">0</span>
+        </button>
+
+        <script src="app.js?v=1.4"></script>
+    </body>
 </html>

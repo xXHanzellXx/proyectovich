@@ -1,24 +1,35 @@
 <!DOCTYPE html>
 <html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistema de Compras - Inicio de Sesión</title>
-    <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        :root {
-            --bg-dark: #0f172a;
-            --surface-dark: #1e293b;
-            --primary-glow: #38bdf8;
-            --text-muted: #94a3b8;
-            --border-glow: #334155;
-            --input-bg: #0f172a;
-        }
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Sistema de Compras - Inicio de Sesión</title>
+        <link rel="stylesheet" href="styles.css">
+        <link rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+        <style>
+        :root{
+  --bg-main: #f8fafc;
+  --bg-card: #ffffff;
+
+  --primary: #2563eb;
+  --primary-hover: #1d4ed8;
+
+  --secondary: #64748b;
+
+  --success: #16a34a;
+  --danger: #dc2626;
+
+  --border: #dbeafe;
+
+  --text-main: #0f172a;
+  --text-muted: #64748b;
+}
 
         body {
             background-color: var(--bg-dark);
             font-family: 'Segoe UI', system-ui, sans-serif;
+            font-size: 17px;
             color: #f8fafc;
             margin: 0;
             min-height: 100vh;
@@ -44,10 +55,10 @@
         }
 
         .card h2 {
-            font-size: 2rem;
+            font-size: 2.1rem;
             font-weight: 800;
             margin: 0 0 10px 0;
-            background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 100%);
+            background: linear-gradient(135deg, #972323 0%, #24456d 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             letter-spacing: -0.5px;
@@ -68,21 +79,36 @@
         }
 
         .form-group label {
-            font-size: 0.9rem;
+            font-size: 0.95rem;
             font-weight: 600;
             color: var(--text-muted);
             margin-bottom: -10px;
             letter-spacing: 0.5px;
         }
 
+        /* Input con diseño de icono integrado */
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-wrapper i {
+            position: absolute;
+            left: 15px;
+            color: var(--text-muted);
+        }
+
         .form-group input {
             background: var(--input-bg);
             border: 1px solid var(--border-glow);
             border-radius: 10px;
-            padding: 14px 16px;
-            font-size: 1rem;
+            padding: 14px 16px 14px 42px;
+            font-size: 1.05rem;
             color: #f8fafc;
             outline: none;
+            width: 100%;
+            box-sizing: border-box;
             transition: all 0.3s ease;
         }
 
@@ -96,13 +122,17 @@
             color: white;
             border: none;
             padding: 16px;
-            font-size: 1.05rem;
+            font-size: 1.1rem;
             font-weight: 600;
             border-radius: 10px;
             cursor: pointer;
             transition: all 0.3s ease;
             box-shadow: 0 4px 15px rgba(2, 132, 199, 0.3);
             margin-top: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
         }
 
         .btn-login:hover {
@@ -113,7 +143,7 @@
 
         .footer-text {
             margin-top: 25px;
-            font-size: 0.95rem;
+            font-size: 1rem;
             color: var(--text-muted);
         }
 
@@ -129,30 +159,42 @@
             text-decoration: underline;
         }
     </style>
-</head>
-<body>
+    </head>
+    <body>
 
-<div class="container-login">
-    <div class="card">
-        <h2> Entrar al Sistema</h2>
-        <hr>
-        <div class="form-group">
-            <label for="userLogin">Usuario:</label>
-            <input type="text" id="userLogin" placeholder="Panchito">
-            
-            <label for="passLogin">Contraseña:</label>
-            <input type="password" id="passLogin" placeholder="••••••••">
-            
-            <button class="btn-login" onclick="ejecutarLogin()">Ingresar</button>
+        <div class="container-login">
+            <div class="card">
+                <h2>Entrar al Sistema</h2>
+                <hr>
+                <div class="form-group">
+                    <label for="userLogin">Usuario:</label>
+                    <div class="input-wrapper">
+                        <i class="fa-solid fa-user"></i>
+                        <input type="text" id="userLogin"
+                            placeholder="Tu usuario">
+                    </div>
+
+                    <label for="passLogin">Contraseña:</label>
+                    <div class="input-wrapper">
+                        <i class="fa-solid fa-lock"></i>
+                        <input type="password" id="passLogin"
+                            placeholder="••••••••">
+                    </div>
+
+                    <button class="btn-login" onclick="ejecutarLogin()">
+                        <span>Ingresar Seguro</span>
+                        <i class="fa-solid fa-right-to-bracket"></i>
+                    </button>
+                </div>
+
+                <p class="footer-text">
+                    ¿No tienes cuenta? <a href="registro.html">Regístrate
+                        aquí</a>
+                </p>
+            </div>
         </div>
-        
-        <p class="footer-text">
-            ¿No tienes cuenta? <a href="registro.html">Regístrate aquí</a>
-        </p>
-    </div>
-</div>
 
-<script>
+        <script>
 async function ejecutarLogin() {
     const usuario = document.getElementById("userLogin").value;
     const password = document.getElementById("passLogin").value;
@@ -178,10 +220,9 @@ async function ejecutarLogin() {
         }
     } catch (error) {
         console.error("Error en el login:", error);
-        alert("No se pudo conectar con el servidor. Nota: Render duerme los servidores gratis tras 15 min de inactividad, puede tardar un minuto en reaccionar la primera vez.");
+        alert("No se pudo conectar con el servidor backend.");
     }
 }
 </script>
-
-</body>
+    </body>
 </html>
