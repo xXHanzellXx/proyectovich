@@ -110,112 +110,6 @@
     color:#38bdf8;
 }
 
-.historial-compra {
-    margin-bottom: 20px;
-    padding: 15px;
-
-    background: var(--surface);
-    border: 1px solid var(--border-glow);
-    border-radius: 12px;
-
-    box-shadow: 0 2px 8px rgba(0,0,0,.08);
-}
-
-.historial-compra h3 {
-    margin-bottom: 10px;
-    color: var(--primary);
-}
-
-.historial-compra p {
-    color: var(--text-primary);
-}
-
-.historial-productos {
-    margin-top: 15px;
-}
-
-.producto-historial {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-
-    padding: 12px;
-    margin-top: 10px;
-
-    background: rgba(255,255,255,.7);
-    border: 1px solid var(--border-glow);
-    border-radius: 10px;
-}
-
-.producto-historial img {
-    width: 70px;
-    height: 70px;
-    object-fit: cover;
-    border-radius: 10px;
-    border: 1px solid var(--border-glow);
-}
-
-.producto-historial strong {
-    color: var(--text-primary);
-}
-
-.titulo-historial{
-    background: var(--primary);
-    color: white;
-
-    padding: 12px 18px;
-    border-radius: 12px;
-
-    margin-bottom: 20px;
-
-    text-align: center;
-    font-size: 1.4rem;
-    font-weight: 700;
-
-    box-shadow: 0 4px 12px rgba(0,0,0,.12);
-}
-
-.close-btn{
-    position: absolute;
-    font-size: 28px;
-    left: 35px;
-    font-weight: bold;
-    top: 35px;
-
-    cursor: pointer;
-
-    transition: all .2s ease;
-
-    width: 40px;
-    height: 40px;
-
-    display:flex;
-    align-items:center;
-    justify-content:center;
-
-    border-radius:50%;
-}
-
-.close-btn:hover{
-    background:#fee2e2;
-    color:#dc2626;
-
-    transform: scale(1.1);
-}
-
-.foto-usuario{
-    width:40px;
-    height:40px;
-    border-radius:50%;
-    object-fit:cover;
-    border:2px solid var(--primary);
-}
-
-.user-pill{
-    display:flex;
-    align-items:center;
-    gap:10px;
-}
         @media (min-width: 640px) {
             #authButtons {
                 width: auto;
@@ -507,30 +401,6 @@
             position: absolute;
             top: 6px; right: 4px;
         }
-
-        #contenidoHistorial {
-    max-height: 60vh;
-    overflow-y: auto;
-    padding-right: 8px;
-}
-
-#contenidoHistorial::-webkit-scrollbar{
-    width:10px;
-}
-
-#contenidoHistorial::-webkit-scrollbar-track{
-    background:#f1f5f9;
-    border-radius:10px;
-}
-
-#contenidoHistorial::-webkit-scrollbar-thumb{
-    background:var(--primary);
-    border-radius:10px;
-}
-
-#contenidoHistorial::-webkit-scrollbar-thumb:hover{
-    background:#2563eb;
-}
     </style>
     </head>
     <body>
@@ -539,10 +409,7 @@
             <div class="header-flex">
                 <h2>Sistema de Compras - Inventario</h2>
                 <div id="authButtons">
-                    <div id="infoUsuario" class="user-pill">
-                        <img id="fotoPerfil" src alt="Foto">
-                        <span id="nombreUsuario"></span>
-                    </div>
+                    <div id="infoUsuario" class="user-pill"></div>
 
                     <button
                         id="btnHistorial"
@@ -656,7 +523,7 @@
 
         <div id="modalCarrito" class="modal">
             <div class="modal-content">
-                <button class="close-btn"
+                <button class="close"
                     onclick="cerrarModal('modalCarrito')">&times;</button>
                 <h2 style="margin-top: 0;">🛒 Tu Carrito de Compras</h2>
                 <hr
@@ -677,22 +544,6 @@
                     <button class="btn-primary"
                         style="width: 100%; background: var(--success);"
                         onclick="finalizarCompra()">Finalizar Compra</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- MODAL HISTORIAL -->
-        <div id="modalHistorial" class="modal">
-            <div class="modal-content">
-                <span class="close-btn"
-                    onclick="cerrarModal('modalHistorial')">&times;</span>
-
-                <h2 class="titulo-historial">
-                    Historial de Compras
-                </h2>
-
-                <div id="contenidoHistorial">
-                    <!-- Se llena dinámicamente -->
                 </div>
             </div>
         </div>
