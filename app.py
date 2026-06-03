@@ -220,10 +220,12 @@ def registro():
             }), 400
 
         nuevo_usuario = {
-            "usuario": usuario,
-            "password": password,
-            "rol": data.get("rol", "cliente")
-        }
+    "usuario": data["usuario"],
+    "correo": data.get("correo", ""),
+    "password": data["password"],
+    "rol": data.get("rol", "cliente"),
+    "imagen": data.get("imagen", "")
+}
 
         usuarios_col.insert_one(nuevo_usuario)
 
