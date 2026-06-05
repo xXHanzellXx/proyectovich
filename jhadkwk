@@ -1,7 +1,0 @@
-const archivo = document.getElementById("imagen").files[0];
-
-let imagenBase64 = "";
-
-if (archivo) {
-  imagenBase64 = await convertirABase64(archivo);
-}
