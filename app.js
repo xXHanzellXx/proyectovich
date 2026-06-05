@@ -469,55 +469,22 @@ async function enviarEdicion(id) {
 
 // MANUALES DINÁMICOS
 function configurarManual(tipo) {
-    const titulo = document.getElementById("manualTitulo");
-    const cuerpo = document.getElementById("manualCuerpo");
-
-    const contenidos = {
-    "tecnico": {
-        titulo: "🛠️ Manual Técnico de Arquitectura",
-        cuerpo: `
-            <p><b>Arquitectura del Sistema:</b> Basada en el stack <b>MERN-lite</b> (MongoDB, Express/Flask, JS nativo). Utiliza una estructura de microservicios para el manejo de datos.</p>
-            <br>
-            <p><b>Componentes Clave:</b></p>
-            <ul>
-                <li><b>Base de Datos:</b> Cluster en la nube con MongoDB Atlas utilizando documentos JSON.</li>
-                <li><b>Backend:</b> API REST desarrollada en Flask con manejo de CORS y serialización de objetos.</li>
-                <li><b>Frontend:</b> Interfaz dinámica con manipulacion del DOM y persistencia local mediante LocalStorage.</li>
-            </ul>
-            <br>
-            <p><b>Endpoints Habilitados:</b> GET (Lectura), POST (Creación), PUT (Actualización) y DELETE (Eliminación) sobre la ruta <code>/productos</code>.</p>
-        `
+  const titulo = document.getElementById("manualTitulo");
+  const cuerpo = document.getElementById("manualCuerpo");
+  const contenidos = {
+    tecnico: {
+      titulo: "🛠️ Manual Técnico de Arquitectura",
+      cuerpo: `<p><b>Arquitectura del Sistema:</b> MERN-lite...</p>`,
     },
-    "usuario_invitado": {
-        titulo: "📖 Guía de Navegación para Visitantes",
-        cuerpo: `
-            <p>¡Bienvenido a <b>ShopSystem</b>! Actualmente estás navegando en modo lectura.</p>
-            <br>
-            <p><b>¿Qué puedes hacer?</b></p>
-            <ul>
-                <li>Explorar nuestro catálogo de productos en tiempo real.</li>
-                <li>Visualizar precios actualizados y disponibilidad.</li>
-            </ul>
-            <br>
-            <p>Para poder agregar artículos a tu carrito de compras y realizar pedidos, por favor utiliza los botones de la parte superior para <b>Iniciar Sesión</b> o <b>Crear una cuenta nueva</b> en pocos segundos.</p>
-        `
+    usuario_invitado: {
+      titulo: "📖 Guía de Navegación para Visitantes",
+      cuerpo: `<p>¡Bienvenido a <b>ShopSystem</b>!...</p>`,
     },
-    "usuario_cliente": {
-        titulo: "🛍️ Panel de Ayuda para Clientes",
-        cuerpo: `
-            <p>¡Hola! Has iniciado sesión correctamente. Ahora tienes acceso total a las funciones de compra.</p>
-            <br>
-            <p><b>Instrucciones de Compra:</b></p>
-            <ol>
-                <li>Navega por la tabla de productos y haz clic en el botón <b> Comprar</b> para añadir items.</li>
-                <li>Revisa tu selección haciendo clic en el <b>botón flotante verde</b> ubicado en la esquina inferior izquierda.</li>
-                <li>Desde el carrito modal, puedes eliminar productos o confirmar tu pedido final.</li>
-            </ol>
-            <br>
-            <p><i>Nota: Tu sesión permanecerá activa hasta que decidas usar el botón de "Cerrar Sesión".</i></p>
-        `
-    }
-};
+    usuario_cliente: {
+      titulo: "🛍️ Panel de Ayuda para Clientes",
+      cuerpo: `<p>¡Hola! Has iniciado sesión correctamente...</p>`,
+    },
+  };
 
   if (titulo && cuerpo && contenidos[tipo]) {
     titulo.innerText = contenidos[tipo].titulo;
