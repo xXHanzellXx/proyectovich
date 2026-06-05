@@ -176,7 +176,7 @@ ${stockDisponible},
                 <tr>
                     <td data-label="Producto / Categoría">
                         <div style="display: flex; align-items: center; gap: 10px;">
-                            <img src="${urlImagen}" alt="${p.nombre}" class="img-producto-tabla" style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px;">
+                            <img src="${urlImagen}" alt="${p.nombre}" class="img-producto-tabla" style="width: 100px; height: 100px; object-fit: cover; border-radius: 4px;">
                             <div>
                                 <span class="category-tag" style="display:block; font-size:10px; color:var(--primary-glow); font-weight:bold; text-transform:uppercase;">${cat}</span>
                                 <b>${p.nombre}</b>
@@ -231,7 +231,13 @@ function agregarVarios(id, nombre, precio, stockDisponible) {
   if (productoEnCarrito) {
     productoEnCarrito.cantidad += cantidadSolicitada;
   } else {
-    carrito.push({ id, nombre, precio, cantidad: cantidadSolicitada });
+    carrito.push({
+      id,
+      nombre,
+      precio,
+      cantidad: cantidadSolicitada,
+      imagen: obtenerImagenProducto(id),
+    });
   }
 
   guardarCarrito();
@@ -239,6 +245,20 @@ function agregarVarios(id, nombre, precio, stockDisponible) {
 
   alert(`Agregado: ${nombre} (x${cantidadSolicitada}) 🛒`);
   inputCantidad.value = 1;
+}
+
+function obtenerImagenProducto(id) {
+  const filas = document.querySelectorAll("#cuerpoTabla tr");
+
+  for (const fila of filas) {
+    const boton = fila.querySelector(`button[onclick*="${id}"]`);
+    if (boton) {
+      const img = fila.querySelector("img");
+      return img ? img.src : "";
+    }
+  }
+
+  return "";
 }
 
 // INTERFAZ DEL CARRITO AGRUPADO
@@ -261,11 +281,22 @@ function actualizarInterfazCarrito() {
       const subtotalItem = item.precio * item.cantidad;
       total += subtotalItem;
       lista.innerHTML += `
-                <div class="item-carrito" style="display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid var(--border-glow); align-items: center;">
-                    <span>${item.nombre} <b>(x${item.cantidad})</b></span>
-                    <span><b>₡${subtotalItem}</b> <button onclick="eliminarDelCarrito(${index})" style="background:none; color:red; margin-left:8px; border:none; cursor:pointer;">✕</button></span>
-                </div>
-            `;
+    <div class="item-carrito" style="display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid var(--border-glow); align-items:center; gap:10px;">
+        
+        <div style="display:flex; align-items:center; gap:10px;">
+            <img src="${item.imagen || "https://placehold.co/50x50?text=📦"}"
+                 style="width:45px; height:45px; object-fit:cover; border-radius:6px;">
+            
+            <span>${item.nombre} <b>(x${item.cantidad})</b></span>
+        </div>
+
+        <span>
+            <b>₡${subtotalItem}</b>
+            <button onclick="eliminarDelCarrito(${index})"
+                style="background:none; color:red; margin-left:8px; border:none; cursor:pointer;">✕</button>
+        </span>
+    </div>
+`;
     });
   }
   if (totalSpan) totalSpan.innerText = `₡${total}`;
@@ -471,18 +502,51 @@ async function enviarEdicion(id) {
 function configurarManual(tipo) {
   const titulo = document.getElementById("manualTitulo");
   const cuerpo = document.getElementById("manualCuerpo");
+
   const contenidos = {
     tecnico: {
       titulo: "🛠️ Manual Técnico de Arquitectura",
-      cuerpo: `<p><b>Arquitectura del Sistema:</b> MERN-lite...</p>`,
+      cuerpo: `
+            <p><b>Arquitectura del Sistema:</b> Basada en el stack <b>MERN-lite</b> (MongoDB, Express/Flask, JS nativo). Utiliza una estructura de microservicios para el manejo de datos.</p>
+            <br>
+            <p><b>Componentes Clave:</b></p>
+            <ul>
+                <li><b>Base de Datos:</b> Cluster en la nube con MongoDB Atlas utilizando documentos JSON.</li>
+                <li><b>Backend:</b> API REST desarrollada en Flask con manejo de CORS y serialización de objetos.</li>
+                <li><b>Frontend:</b> Interfaz dinámica con manipulacion del DOM y persistencia local mediante LocalStorage.</li>
+            </ul>
+            <br>
+            <p><b>Endpoints Habilitados:</b> GET (Lectura), POST (Creación), PUT (Actualización) y DELETE (Eliminación) sobre la ruta <code>/productos</code>.</p>
+        `,
     },
     usuario_invitado: {
       titulo: "📖 Guía de Navegación para Visitantes",
-      cuerpo: `<p>¡Bienvenido a <b>ShopSystem</b>!...</p>`,
+      cuerpo: `
+            <p>¡Bienvenido a <b>ShopSystem</b>! Actualmente estás navegando en modo lectura.</p>
+            <br>
+            <p><b>¿Qué puedes hacer?</b></p>
+            <ul>
+                <li>Explorar nuestro catálogo de productos en tiempo real.</li>
+                <li>Visualizar precios actualizados y disponibilidad.</li>
+            </ul>
+            <br>
+            <p>Para poder agregar artículos a tu carrito de compras y realizar pedidos, por favor utiliza los botones de la parte superior para <b>Iniciar Sesión</b> o <b>Crear una cuenta nueva</b> en pocos segundos.</p>
+        `,
     },
     usuario_cliente: {
       titulo: "🛍️ Panel de Ayuda para Clientes",
-      cuerpo: `<p>¡Hola! Has iniciado sesión correctamente...</p>`,
+      cuerpo: `
+            <p>¡Hola! Has iniciado sesión correctamente. Ahora tienes acceso total a las funciones de compra.</p>
+            <br>
+            <p><b>Instrucciones de Compra:</b></p>
+            <ol>
+                <li>Navega por la tabla de productos y haz clic en el botón <b> Comprar</b> para añadir items.</li>
+                <li>Revisa tu selección haciendo clic en el <b>botón flotante verde</b> ubicado en la esquina inferior izquierda.</li>
+                <li>Desde el carrito modal, puedes eliminar productos o confirmar tu pedido final.</li>
+            </ol>
+            <br>
+            <p><i>Nota: Tu sesión permanecerá activa hasta que decidas usar el botón de "Cerrar Sesión".</i></p>
+        `,
     },
   };
 
